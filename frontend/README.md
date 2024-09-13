@@ -22,16 +22,12 @@ AI 기반 이미지 향상 도구.
 
 - 프론트엔드:
   - React
-  - TensorFlow.js (클라이언트 측 AI 처리용)
-  - React-Dropzone (이미지 업로드용)
-  - React-Compare-Image (전/후 비교용)
+  - React-Router
+
 - 백엔드:
-  - FastAPI (Python, 더 복잡한 AI 모델 처리용)
-  - TensorFlow/PyTorch (서버 측 AI 처리용)
-- AI 모델:
-  - ESRGAN (초해상도용)
-  - DnCNN (노이즈 감소용)
-  - Pix2Pix (색상 보정용)
+  - Python
+  - FastAPI
+  - OpenCV (이미지 처리)
 
 ## 프로젝트 구조
 
