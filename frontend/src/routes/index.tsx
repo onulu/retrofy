@@ -1,9 +1,12 @@
+import ImageUpload from '../components/ImageUpload'
+
 export default function Index() {
+  const handleImageUpload = (file: File) => {
+    console.log('file', file)
+  }
   return (
     <div className="flex justify-center items-center h-full">
-      <button className="border-gray-100 border px-4 py-2 rounded-full">
-        Add Image
-      </button>
+      <ImageUpload onImageUpload={handleImageUpload} />
     </div>
   )
 }
