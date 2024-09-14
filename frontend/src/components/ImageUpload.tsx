@@ -24,7 +24,6 @@ export default function ImageUpload({ onImageUpload }: ImageUploadProps) {
   )
 
   const { getRootProps, getInputProps, isDragActive }: DropzoneState =
-    // @ts-expect-error: ts(2352) lint asking for optional props.
     useDropzone({
       onDrop,
       accept: { 'image/*': [] },
@@ -41,7 +40,6 @@ export default function ImageUpload({ onImageUpload }: ImageUploadProps) {
             : 'border-gray-300 hover:border-gray-400'
         }`}
       >
-        {/* @ts-expect-error: ts(2559) the library definition is wrong. */}
         <input {...getInputProps()} />
         {preview ? (
           <div className="mt-6">
