@@ -1,0 +1,29 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = "Add your description here"
+authors = [
+    { name = "onulu", email = "123046744+onulu@users.noreply.github.com" }
+]
+dependencies = [
+    "fastapi>=0.114.2",
+    "uvicorn>=0.30.6",
+    "python-multipart>=0.0.9",
+    "opencv-python-headless>=4.10.0.84",
+]
+readme = "README.md"
+requires-python = ">= 3.8"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = []
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/backend"]
