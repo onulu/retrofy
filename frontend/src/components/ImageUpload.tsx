@@ -33,7 +33,7 @@ const ImageUpload = ({ onImageUpload }: ImageUploadProps) => {
   return (
     <div
       {...getRootProps()}
-      className={`bg-zinc-900 rounded-3xl p-4 relative cursor-pointer h-[400px] ${
+      className={`rounded-3xl p-4 relative cursor-pointer h-[400px] ${
         isDragActive
           ? 'border-blue-500 bg-blue-50'
           : 'border-gray-300 hover:border-gray-400'

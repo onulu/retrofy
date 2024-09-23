@@ -9,7 +9,7 @@ import Index from './routes/index.tsx'
 import './index.css'
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Shader from './routes/shader.tsx'
+import Hello from './routes/hello.tsx'
 
 const router = createBrowserRouter([
   {
@@ -25,8 +25,8 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: '/shader',
-    element: <Shader />,
+    path: '/hello',
+    element: <Hello />,
   },
 ])
 

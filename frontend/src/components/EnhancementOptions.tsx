@@ -66,7 +66,7 @@ const EnhancementOptions = ({ onOptionsChange }: Props) => {
   }
 
   return (
-    <div className="bg-zinc-900 rounded-3xl p-4">
+    <div className="rounded-3xl p-4">
       <fieldset className="rounded-xl border-zinc-50/50 border p-4">
         <legend className="px-1">Enhancement Options</legend>
         <div className="grid gap-4">
@@ -79,7 +79,7 @@ const EnhancementOptions = ({ onOptionsChange }: Props) => {
                 <input
                   type="text"
                   value={options && options[option.id]}
-                  className="rounded-lg bg-gray-700 w-12 h-10 text-center"
+                  className="rounded-lg w-12 h-10 text-center"
                   onChange={(e) =>
                     handleOptionChange(option.id, Number(e.target.value))
                   }

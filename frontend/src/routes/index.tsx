@@ -4,6 +4,7 @@ import EnhancementOptions from '../components/EnhancementOptions'
 import ImageUpload from '../components/ImageUpload'
 
 import { getEnhanceImage } from '../services/api'
+import { Button } from '@/components/ui/button'
 
 export default function Index() {
   const [uploadedImage, setUploadedImage] = useState<File | null>(null)
@@ -33,14 +34,9 @@ export default function Index() {
 
   return (
     <div className="grid gap-2 lg:grid-cols-[minmax(360px,1fr)_2fr]">
-      <EnhancementOptions onOptionsChange={handleOptionsChange} />
+      {/* <EnhancementOptions onOptionsChange={handleOptionsChange} />
       <ImageUpload onImageUpload={handleImageUpload} />
-      <button
-        className="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-        onClick={handleEnhanceImage}
-      >
-        Enhance now
-      </button>
+      <Button onClick={handleEnhanceImage}>Enhance now</Button>
       {enhancedImageBlob && (
         <div>
           <img
@@ -48,7 +44,7 @@ export default function Index() {
             className="h-auto"
           />
         </div>
-      )}
+      )} */}
     </div>
   )
 }
