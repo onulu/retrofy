@@ -9,6 +9,7 @@ import Index from './routes/index.tsx'
 import './index.css'
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import Shader from './routes/shader.tsx'
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
         element: <About />,
       },
     ],
+  },
+  {
+    path: '/shader',
+    element: <Shader />,
   },
 ])
 
