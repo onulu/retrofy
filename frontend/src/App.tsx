@@ -1,5 +1,40 @@
+import { useEffect } from 'react'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+
+import Root from './routes/root'
+import ErrorPage from './error-page'
+import Index from './routes'
+import About from './routes/about'
+import DashboardRoute from './routes/dashboard'
+import useStore from './store'
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Root />,
+    errorElement: <ErrorPage />,
+    children: [
+      { index: true, element: <Index /> },
+      {
+        path: '/about',
+        element: <About />,
+      },
+      {
+        path: '/dashboard',
+        element: <DashboardRoute />,
+      },
+    ],
+  },
+])
+
 function App() {
-  return <h1 className="text-3xl font-bold underline">App.tsx</h1>
+  const resetStore = useStore((state) => state.resetState)
+
+  useEffect(() => {
+    resetStore()
+  }, [resetStore])
+
+  return <RouterProvider router={router} />
 }
 
 export default App

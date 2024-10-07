@@ -7,13 +7,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { Bot, LifeBuoy, SquareTerminal, Triangle } from 'lucide-react'
-
-import { useTheme } from '@/components/theme-provider'
-import { Moon, Sun } from 'lucide-react'
+import { Bot, Triangle } from 'lucide-react'
+import ModeToggle from '@/components/mode-toggle'
+import MobileDrawer from '@/components/dashboard/MobileDrawer'
 
 export default function Root() {
-  const { theme, setTheme } = useTheme()
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <div className="border relative grid w-full pl-[56px] max-w-screen-xl h-screen md:mx-auto">
@@ -27,69 +25,30 @@ export default function Root() {
           </div>
           <TooltipProvider>
             <nav className="grid gap-1 p-2">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon" className="rounded-lg">
-                    <SquareTerminal className="size-5" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="right" sideOffset={5}>
-                  Playground
-                </TooltipContent>
-              </Tooltip>
+              <MobileDrawer />
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
                     variant="ghost"
                     size="icon"
                     className="rounded-lg"
-                    aria-label="Models"
+                    aria-label="About Page"
                   >
                     <Bot className="size-5" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="right" sideOffset={5}>
-                  Models
+                  About
                 </TooltipContent>
               </Tooltip>
             </nav>
             <div className="mt-auto grid gap-1 p-2">
               <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="rounded-lg"
-                    aria-label={theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
-                    onClick={() => {
-                      console.log('clicked')
-                      setTheme(theme === 'dark' ? 'light' : 'dark')
-                    }}
-                  >
-                    {theme === 'dark' ? (
-                      <Sun className="size-5 fill-foreground" />
-                    ) : (
-                      <Moon className="size-5 fill-foreground" />
-                    )}
-                  </Button>
+                <TooltipTrigger>
+                  <ModeToggle />
                 </TooltipTrigger>
                 <TooltipContent side="right" sideOffset={5}>
                   Toggle Theme
-                </TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="mt-auto rounded-lg"
-                    aria-label="Help"
-                  >
-                    <LifeBuoy className="size-5" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="right" sideOffset={5}>
-                  Help
                 </TooltipContent>
               </Tooltip>
             </div>
@@ -98,7 +57,7 @@ export default function Root() {
         <div className="flex flex-col">
           <header className="w-full flex h-[57px] items-center gap-1 border-b px-4">
             <h1 className="text-l font-semibold">
-              Enhancify: AI-Powered Image Tool
+              Enhancify: Make retro style image with AI
             </h1>
           </header>
           <Outlet />

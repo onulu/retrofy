@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
-import { getEnhanceImage } from '../services/api'
-import { Input } from './ui/input'
+import { uploadImageForDithering } from '../services/api'
+import { RadioGroup, RadioGroupItem } from './ui/radio-group'
 import { Label } from './ui/label'
 import { Button } from './ui/button'
 import {
@@ -11,47 +11,98 @@ import {
   SelectTrigger,
   SelectValue,
 } from './ui/select'
-import ImageUpload from './ImageUpload'
-// import ImageSlider from './ImageSlider'
+import ImageBlob from './ImageBlob'
+import { Input } from './ui/input'
+import { Upload } from 'lucide-react'
 
-const beforeImage = 'https://picsum.photos/600/300'
-const afterImage = 'https://picsum.photos/600/300?grayscale'
+export interface DitheringParams {
+  matrix: 2 | 4 | 8
+  color: 'bw' | 'color'
+}
 
 const Playground = () => {
   const [uploadedImage, setUploadedImage] = useState<File | null>(null)
-  const [options, setOptions] = useState<Record<string, number>>({})
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null)
   const [enhancedImageBlob, setEnhancedImageBlob] = useState<Blob | null>(null)
 
-  const handleImageUpload = (file: File) => {
-    console.log('file', file)
-    setUploadedImage(file)
-  }
+  const [filterModel, setFilterModel] = useState<string | null>(null)
 
-  const handleOptionsChange = (options: Record<string, number>) => {
-    setOptions(options)
+  const [ditheringParams, setDitheringParams] = useState<
+    Record<string, number | string>
+  >({
+    matrix: 4,
+    color: 'bw',
+  })
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setUploadedImage(file)
+
+    const reader = new FileReader()
+    reader.onload = () => {
+      setUploadedImageUrl(reader.result as string)
+    }
+    reader.readAsDataURL(file)
   }
 
   const handleEnhanceImage = async () => {
     if (!uploadedImage) return
+
     setEnhancedImageBlob(null)
 
+    const enhanceMethods = {
+      dithering: () => uploadImageForDithering(uploadedImage, ditheringParams),
+    }
+
     try {
-      const enhancedBlob = await getEnhanceImage(uploadedImage, options)
-      console.log('enhancedBlob', enhancedBlob)
+      const enhanceModel =
+        enhanceMethods[filterModel as keyof typeof enhanceMethods]
+      if (!enhanceModel) {
+        console.error(`Unsupported filter model: ${filterModel}`)
+        return
+      }
+
+      const enhancedBlob = await enhanceModel()
       setEnhancedImageBlob(enhancedBlob)
+      console.log('enhancedBlob', enhancedBlob)
     } catch (err) {
-      console.error(err)
+      console.error('Error enhancing image', err)
     }
   }
+
+  const onDownload = () => {
+    if (!enhancedImageBlob) return
+    const url = URL.createObjectURL(enhancedImageBlob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'enhanced.png'
+    a.click()
+  }
+
   return (
     <main className=" grid gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 h-[calc(100vh-57px)]">
       <div className="hidden flex-col items-start gap-8 md:flex overflow-scroll">
-        <form className="grid w-full items-start gap-6 grid-rows-[auto_auto_1fr]">
+        <div className="grid w-full h-full items-start gap-6 grid-rows-[auto_1fr]">
+          <fieldset className="grid gap-6 rounded-lg border p-4">
+            <legend className="font-medium text-sm">Upload Image</legend>
+            <div className="grid gap-3">
+              <Input
+                id="image-input"
+                type="file"
+                accept="image/*"
+                multiple={false}
+                className="cursor-pointer"
+                onChange={handleImageUpload}
+              />
+            </div>
+          </fieldset>
           <fieldset className="grid gap-6 rounded-lg border p-4">
             <legend className="font-medium text-sm">Settings</legend>
             <div className="grid gap-3">
               <Label htmlFor="filter">Filter Model</Label>
-              <Select>
+              <Select value={filterModel ?? ''} onValueChange={setFilterModel}>
                 <SelectTrigger id="filter" className="items-center">
                   <SelectValue placeholder="Select a model" />
                 </SelectTrigger>
@@ -59,50 +110,107 @@ const Playground = () => {
                   <SelectItem value="dithering">Dithering</SelectItem>
                   <SelectItem value="glitch">VHS Glitch</SelectItem>
                   <SelectItem value="halftone">Halftone</SelectItem>
+                  <SelectItem value="noisy">Noisy</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-            <div className="grid gap-3">
-              <Label htmlFor="parameter">Parameter</Label>
-              <Input id="parameter" type="number" placeholder="0.1" />
-            </div>
+            {filterModel === 'dithering' && (
+              <div>
+                <div className="grid gap-3">
+                  <Label htmlFor="parameter">Matrix Size</Label>
+                  <RadioGroup
+                    className="grid grid-cols-3"
+                    defaultValue={ditheringParams.matrix.toString()}
+                    onValueChange={(value) =>
+                      setDitheringParams({
+                        ...ditheringParams,
+                        matrix: Number(value) as 2 | 4 | 8,
+                      })
+                    }
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="2" id="option-one" />
+                      <Label htmlFor="option-one">2 x 2</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="4" id="option-two" />
+                      <Label htmlFor="option-two">4 x 4</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="8" id="option-three" />
+                      <Label htmlFor="option-three">8 x 8</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+                <div className="grid gap-3 mt-4">
+                  <Label htmlFor="parameter">Color Shade</Label>
+                  <RadioGroup
+                    className="grid grid-cols-2"
+                    defaultValue="bw"
+                    onValueChange={(value) =>
+                      setDitheringParams({
+                        ...ditheringParams,
+                        color: value as 'bw' | 'color',
+                      })
+                    }
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="bw" id="option-one" />
+                      <Label htmlFor="option-one">Black and White</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="color" id="option-two" />
+                      <Label htmlFor="option-two">Color</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+              </div>
+            )}
           </fieldset>
-          <fieldset className="grid gap-6 rounded-lg border p-4">
-            <legend className="font-medium text-sm">Output Options</legend>
-            <div className="grid gap-3">
-              <Label htmlFor="size">Size</Label>
-              <Input id="image_size" type="number" />
-            </div>
-            {/* Quality */}
-            <div className="grid gap-3">
-              <Label htmlFor="quality">Quality</Label>
-              <Input id="image_quality" type="number" placeholder="90" />
-            </div>
 
-            <div className="grid gap-3">
-              <Label htmlFor="quality">Quality</Label>
-              <Input id="image_quality" type="number" placeholder="90" />
-            </div>
-            <div className="grid gap-3">
-              <Label htmlFor="quality">Quality</Label>
-              <Input id="image_quality" type="number" placeholder="90" />
-            </div>
-          </fieldset>
-
-          <div className="grid w-full">
-            <Button onClick={handleEnhanceImage}>Generate</Button>
+          <div className="grid w-full self-end">
+            <Button
+              onClick={handleEnhanceImage}
+              disabled={!uploadedImage && !filterModel}
+            >
+              Generate
+            </Button>
           </div>
-        </form>
+        </div>
       </div>
       <div className="rounded-xl bg-card lg:col-span-2 flex flex-col h-full">
         <div className="w-full h-full flex justify-center items-center">
-          <ImageUpload onImageUpload={handleImageUpload} />
+          <div className="relative w-full h-full flex flex-col items-center justify-center">
+            {uploadedImageUrl ? (
+              <div className="w-full flex items-center justify-center relative group">
+                <img
+                  src={uploadedImageUrl}
+                  alt="uploaded image preview"
+                  className="max-h-[70vh] object-cover transition-transform duration-300 ease-in-out"
+                />
+              </div>
+            ) : (
+              <Button
+                aria-label="Upload image"
+                onClick={() => document.getElementById('image-input')?.click()}
+              >
+                <Upload className="mr-2" />
+                Choose image
+              </Button>
+            )}
+          </div>
         </div>
-        {/* <ImageSlider beforeImage={beforeImage} afterImage={afterImage} /> */}
-        <div className="p-4 w-full flex gap-2 justify-end">
-          <Button variant="outline">Image Settings</Button>
-          <Button variant="outline">Download</Button>
-        </div>
+        {enhancedImageBlob && (
+          <>
+            <ImageBlob imageBlob={enhancedImageBlob} />
+            <div className="p-4 w-full flex gap-2 justify-end">
+              <Button variant="outline">Image Settings</Button>
+              <Button variant="outline" onClick={onDownload}>
+                Download
+              </Button>
+            </div>
+          </>
+        )}
       </div>
     </main>
   )
