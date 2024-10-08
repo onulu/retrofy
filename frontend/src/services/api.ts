@@ -1,5 +1,16 @@
 const API_BASE_URL = 'http://localhost:8000'
 
+function toSnakeCase(
+  obj: Record<string, string | number>
+): Record<string, string | number> {
+  const newObj: Record<string, string | number> = {}
+  for (const key in obj) {
+    const snakeCaseKey = key.replace(/([A-Z])/g, '_$1').toLowerCase()
+    newObj[snakeCaseKey] = obj[key]
+  }
+  return newObj
+}
+
 async function uploadImage(
   endpoint: string,
   file: File,
@@ -9,7 +20,10 @@ async function uploadImage(
   formData.append('file', file)
 
   const queryParams = new URLSearchParams(
-    Object.entries(params).map(([key, value]) => [key, value.toString()])
+    Object.entries(toSnakeCase(params)).map(([key, value]) => [
+      key,
+      value.toString(),
+    ])
   )
 
   const response = await fetch(`${API_BASE_URL}/${endpoint}?${queryParams}`, {
@@ -28,6 +42,7 @@ export async function uploadImageForDithering(
   file: File,
   params: Record<string, number | string>
 ): Promise<Blob> {
+  // dithered, dither
   return uploadImage('dither', file, params)
 }
 
