@@ -1,3 +1,5 @@
+import { FilterModels, FilterParams } from '@/types'
+
 const API_BASE_URL = 'http://localhost:8000'
 
 function toSnakeCase(
@@ -38,12 +40,28 @@ async function uploadImage(
   return await response.blob()
 }
 
+export async function applyFilterLogic(
+  file: File,
+  model: FilterModels,
+  params: FilterParams
+): Promise<Blob> {
+  switch (model) {
+    case 'dithering':
+      return await uploadImageForDithering(file, params)
+    case 'glitch':
+      return uploadImageForGlitch(file, params)
+    default:
+      console.log('here')
+      return file
+  }
+}
+
 export async function uploadImageForDithering(
   file: File,
   params: Record<string, number | string>
 ): Promise<Blob> {
   // dithered, dither
-  return uploadImage('dither', file, params)
+  return uploadImage('dithering', file, params)
 }
 
 export async function uploadImageForGlitch(

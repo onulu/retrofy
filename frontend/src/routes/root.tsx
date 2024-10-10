@@ -57,7 +57,7 @@ export default function Root() {
         <div className="flex flex-col">
           <header className="w-full flex h-[57px] items-center gap-1 border-b px-4">
             <h1 className="text-l font-semibold">
-              Enhancify: Make retro style image with AI
+              Retrofy: Make retro style image with AI
             </h1>
           </header>
           <Outlet />

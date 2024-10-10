@@ -1,5 +1,4 @@
 import useStore from '@/store'
-import { FilterModels } from '@/enum'
 
 import DitheringSelector from './DitheringSelector'
 
@@ -10,7 +9,7 @@ const ParameterSelector = () => {
 
   return (
     <div className="self-start">
-      {selectedModel === FilterModels.DITHERING && <DitheringSelector />}
+      {selectedModel === 'dithering' && <DitheringSelector />}
       {/* {selectedModel === 'vhs_glitch' && renderVhsGlitchSelector()} */}
     </div>
   )

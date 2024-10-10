@@ -1,12 +1,12 @@
 import { Button } from '@/components/ui/button'
-import { uploadImageForDithering } from '@/services/api'
 import useStore from '@/store'
 
 const GenerateButton = () => {
   const originalImage = useStore((state) => state.originalImage)
-  const setEnhancedImage = useStore((state) => state.setEnhancedImage)
   const selectedModel = useStore((state) => state.selectedModel)
   const modelParameters = useStore((state) => state.modelParameters)
+  const applyFilter = useStore((state) => state.applyFilter)
+  const isProcessing = useStore((state) => state.isProcessing)
 
   const handleGenerate = async () => {
     // print values from the store
@@ -14,16 +14,10 @@ const GenerateButton = () => {
     console.log('selectedModel', selectedModel)
     console.log('modelParameters', modelParameters)
 
-    if (!originalImage) return
+    if (!originalImage || !selectedModel || !modelParameters) return
+
     try {
-      const enhancedImage = await uploadImageForDithering(
-        originalImage.file,
-        modelParameters
-      )
-
-      setEnhancedImage(enhancedImage)
-
-      console.log('enhancedImage', enhancedImage)
+      await applyFilter()
     } catch (error) {
       console.error('Error generating image', error)
     }
@@ -33,9 +27,9 @@ const GenerateButton = () => {
     <Button
       className="self-end"
       onClick={handleGenerate}
-      disabled={!originalImage || !selectedModel}
+      disabled={!originalImage || !selectedModel || isProcessing}
     >
-      Generate
+      {isProcessing ? 'Generating...' : 'Generate'}
     </Button>
   )
 }

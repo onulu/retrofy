@@ -1,5 +1,5 @@
-import Playground from '@/components/Playground'
+import Dashboard from '@/components/Dashboard'
 
 export default function Index() {
-  return <Playground />
+  return <Dashboard />
 }

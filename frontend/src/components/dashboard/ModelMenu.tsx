@@ -1,4 +1,4 @@
-import ImageUploader from '../ImageUploader'
+import ImageUploader from './ImageUploader'
 import GenerateButton from './GenerateButton'
 import ModelSelector from './ModelSelector'
 import ParameterSelector from './ParameterSelector'

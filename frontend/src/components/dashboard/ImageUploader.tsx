@@ -1,18 +1,24 @@
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 
 import useStore from '@/store'
-
-import { Button } from './ui/button'
 
 const ImageUploader = () => {
   const originalImage = useStore((state) => state.originalImage)
   const setOriginalImage = useStore((state) => state.setOriginalImage)
-
+  const setEnhancedImage = useStore((state) => state.setEnhancedImage)
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
+    const maxSizeInBytes = 3 * 1024 * 1024 // 3MB
+
+    if (file && file.size > maxSizeInBytes) {
+      console.log('파일 크기는 3MB를 초과할 수 없습니다.')
+      e.target.value = ''
+    }
     if (file) {
       setOriginalImage(file)
+      setEnhancedImage(null)
     }
   }
 
