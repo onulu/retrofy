@@ -11,7 +11,7 @@ import cv2
 import numpy as np
 
 from .image_processing import process_image, dither_image
-from .dithering import apply_floyd_steinberg_dithering
+from .dithering import apply_floyd_steinberg_dithering, apply_bayer_dithering
 
 from typing import Union
 
@@ -30,31 +30,14 @@ app.add_middleware(
 
 
 class DitheringParameters(BaseModel):
-    dithering_type: str
+    type: str
     color_mode: str
     grayscale_level: Optional[int] = None
-    color_num: Optional[int] = None
+    palette_name: Optional[str] = None
+    matrix_size: Optional[int] = None
 
 
-# @app.post("/dithered")
-# async def apply_dithered_image(
-#     file: UploadFile = File(...), params: DitheringParameters = Depends()
-# ):
-#     image_bytes = await file.read()
-#     # numpy배열로 변환 후 opencv 이미지로 디코딩
-#     np_array = np.frombuffer(image_bytes, np.uint8)
-#     img = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
-
-#     if img is None:
-#         return JSONResponse(content={"error": "Invalid image format"}, status_code=400)
-
-#     processed_image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-#     _, buffer = cv2.imencode(".jpg", processed_image)
-#     processed_img_bytes = buffer.tobytes()
-#     return Response(content=processed_img_bytes, media_type="image/jpeg")
-
-
-@app.post("/dither")
+@app.post("/dithering")
 async def apply_dithering(
     file: UploadFile = File(...), params: DitheringParameters = Depends()
 ):
@@ -66,22 +49,29 @@ async def apply_dithering(
 
     processed_image = image.copy()
 
-    dithering_type = params.dithering_type
+    type = params.type
     color_mode = params.color_mode
     grayscale_level = params.grayscale_level
-    color_num = params.color_num
+    palette_name = params.palette_name
+    matrix_size = params.matrix_size
 
-    if dithering_type == "floyd-steinberg":
+    if type == "floyd_steinberg":
         processed_image = apply_floyd_steinberg_dithering(
             image,
             color_mode=color_mode,
             grayscale_level=grayscale_level,
-            color_num=color_num,
+            palette_name=palette_name,
         )
 
-    elif dithering_type == "bayer":
-        pass
-    elif dithering_type == "random":
+    elif type == "bayer":
+        processed_image = apply_bayer_dithering(
+            image,
+            color_mode=color_mode,
+            grayscale_level=grayscale_level,
+            palette_name=palette_name,
+            matrix_size=matrix_size,
+        )
+    elif type == "random":
         pass
 
     # 이미지 데이터를 바이트 스트림으로 변환

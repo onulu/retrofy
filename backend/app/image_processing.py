@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 # API
-# /dither - addDither
+# /dithering - addDither
 # /glitch - addGlitch
 # /halftone - addHalftone
 # /noise - addNoise
