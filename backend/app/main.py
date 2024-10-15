@@ -2,16 +2,14 @@ from pydantic import BaseModel
 
 from fastapi import FastAPI, File, UploadFile, Depends
 from fastapi.responses import Response, JSONResponse
-from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
-from io import BytesIO
 from typing import Optional
 
 import cv2
 import numpy as np
 
-from .image_processing import process_image, dither_image
 from .dithering import apply_floyd_steinberg_dithering, apply_bayer_dithering
+from .add_glitch import add_glitch
 
 from typing import Union
 
@@ -51,9 +49,9 @@ async def apply_dithering(
 
     type = params.type
     color_mode = params.color_mode
-    grayscale_level = params.grayscale_level
-    palette_name = params.palette_name
-    matrix_size = params.matrix_size
+    grayscale_level = params.grayscale_level or 4
+    palette_name = params.palette_name or "rgb"
+    matrix_size = params.matrix_size or 2
 
     if type == "floyd_steinberg":
         processed_image = apply_floyd_steinberg_dithering(
@@ -67,7 +65,6 @@ async def apply_dithering(
         processed_image = apply_bayer_dithering(
             image,
             color_mode=color_mode,
-            grayscale_level=grayscale_level,
             palette_name=palette_name,
             matrix_size=matrix_size,
         )
@@ -84,68 +81,48 @@ async def apply_dithering(
     return Response(content=img_bytes, media_type="image/jpeg")
 
 
+class GlitchParameters(BaseModel):
+    shift_amount: Optional[int] = None
+    direction: Optional[str] = None
+    noise_type: Optional[str] = None
+
+
 @app.post("/glitch")
-async def glitch_image(file: UploadFile = File(...)):
-    # 업로드된 파일을 numpy 배열로 변환
+async def glitch_image(
+    file: UploadFile = File(...), params: GlitchParameters = Depends()
+):
     image = np.fromstring(await file.read(), np.uint8)
     image = cv2.imdecode(image, cv2.IMREAD_COLOR)
 
-    processed_image = process_image(image)
+    if image is None:
+        return JSONResponse(content={"error": "Invalid image format"}, status_code=400)
+
+    processed_image = image.copy()
+
+    shift_amount = params.shift_amount or 5
+    direction = params.direction or "horizontal"
+    noise_type = params.noise_type or "gaussian"
+
+    processed_image = add_glitch(
+        processed_image,
+        shift_amount=shift_amount,
+        direction=direction,
+        noise_type=noise_type,
+    )
 
     # 이미지 데이터를 바이트 스트림으로 변환
-    _, buffer = cv2.imencode(".jpg", processed_image)
-    io_buf = BytesIO(buffer)
+    success, buffer = cv2.imencode(".jpg", processed_image)
+    if not success:
+        return Response(content="Image encoding failed")
 
-    # StreamingResponse로 이미지 전송
-    return StreamingResponse(io_buf, media_type="image/png")
+    img_bytes = buffer.tobytes()
 
-
-@app.post("/halftone")
-async def halftone_image(file: UploadFile = File(...)):
-    # 업로드된 파일을 numpy 배열로 변환
-    image = np.fromstring(await file.read(), np.uint8)
-    image = cv2.imdecode(image, cv2.IMREAD_COLOR)
-
-    processed_image = process_image(image)
-
-    # 이미지 데이터를 바이트 스트림으로 변환
-    _, buffer = cv2.imencode(".jpg", processed_image)
-    io_buf = BytesIO(buffer)
-
-    # StreamingResponse로 이미지 전송
-    return StreamingResponse(io_buf, media_type="image/jpeg")
+    return Response(content=img_bytes, media_type="image/jpeg")
 
 
 @app.post("/noise")
 async def noise_image(file: UploadFile = File(...)):
-    # 업로드된 파일을 numpy 배열로 변환
-    image = np.fromstring(await file.read(), np.uint8)
-    image = cv2.imdecode(image, cv2.IMREAD_COLOR)
-
-    processed_image = process_image(image)
-
-    # 이미지 데이터를 바이트 스트림으로 변환
-    _, buffer = cv2.imencode(".jpg", processed_image)
-    io_buf = BytesIO(buffer)
-
-    # StreamingResponse로 이미지 전송
-    return StreamingResponse(io_buf, media_type="image/jpeg")
-
-
-@app.post("/enhance")
-async def enhance_image(file: UploadFile = File(...)):
-    # 업로드된 파일을 numpy 배열로 변환
-    image = np.fromstring(await file.read(), np.uint8)
-    image = cv2.imdecode(image, cv2.IMREAD_COLOR)
-
-    processed_image = process_image(image)
-
-    # 이미지 데이터를 바이트 스트림으로 변환
-    _, buffer = cv2.imencode(".jpg", processed_image)
-    io_buf = BytesIO(buffer)
-
-    # StreamingResponse로 이미지 전송
-    return StreamingResponse(io_buf, media_type="image/jpeg")
+    pass
 
 
 @app.get("/")

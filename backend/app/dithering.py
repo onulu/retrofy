@@ -3,6 +3,7 @@ import numpy as np
 from sklearn.cluster import KMeans
 
 from .palette_presets import PALETTES
+from .image_processing import pixelate, resize_image, adjust_brightness
 
 # 디더링
 # 1. 플로이드 슈타이너 디더링
@@ -11,14 +12,14 @@ from .palette_presets import PALETTES
 
 
 def find_nearest_color(palette, color):
-    # palette = np.array(palette, dtype=np.float64)
-    # color = np.array(color, dtype=np.float64)
     distances = np.sqrt(np.sum((palette - color) ** 2, axis=1))
     return palette[np.argmin(distances)]
 
 
 def rgb_dithering(image: np.ndarray, palette_name: str = None):
     h, w = image.shape[:2]
+    image = resize_image(image, 800)
+    # image = pixelate(image, 10)
     image = image.astype(float)
 
     if palette_name and palette_name in PALETTES:
@@ -67,22 +68,6 @@ def gray_dithering(image: np.ndarray, grayscale_level: int):
 
     image = np.clip(image, 0, 255).astype(np.uint8)
     return image
-
-
-def apply_floyd_steinberg_dithering(
-    image: np.ndarray,
-    color_mode: str,
-    grayscale_level: int = 4,
-    palette_name: str = None,
-) -> np.ndarray:
-    """
-    흑백 디더링: 사용할 그레이 스케일 단계 옵션 설정?
-    """
-
-    if color_mode == "rgb":
-        return rgb_dithering(image, palette_name)
-    else:
-        return gray_dithering(image, grayscale_level)
 
 
 def generate_bayer_matrix(n):
@@ -167,7 +152,6 @@ def gray_bayer_dithering(image: np.ndarray, matrix_size: int = 4):
 def apply_bayer_dithering(
     image: np.ndarray,
     color_mode: str,
-    grayscale_level: int,
     matrix_size: int,
     palette_name: str,
 ) -> np.ndarray:
@@ -176,3 +160,15 @@ def apply_bayer_dithering(
         return rgb_bayer_dithering(image, palette_name, matrix_size)
     else:
         return gray_bayer_dithering(image, matrix_size)
+
+
+def apply_floyd_steinberg_dithering(
+    image: np.ndarray,
+    color_mode: str,
+    grayscale_level: int,
+    palette_name: str,
+) -> np.ndarray:
+    if color_mode == "rgb":
+        return rgb_dithering(image, palette_name)
+    else:
+        return gray_dithering(image, grayscale_level)
