@@ -25,13 +25,20 @@ export type DitheringParams = {
   paletteName?: ColorPalettes
   grayscaleLevel?: number
   matrixSize?: number
-}
+  pixelSize?: number
+} & CommonParams
 
 export type GlitchParams = {
   shiftDirection: 'horizontal' | 'vertical' | 'both'
   shiftAmount?: number
-  noiseType: 'gaussian' | 'salt_pepper' | 'speckle'
+  noiseType?: 'gaussian' | 'salt_pepper' | 'speckle'
   noiseStrength?: number
+} & CommonParams
+
+export type CommonParams = {
+  outputSize: number
+  outputFormat: 'png' | 'jpeg' | 'webp'
+  outputQuality?: number
 }
 
 export type FilterParams = DitheringParams | GlitchParams

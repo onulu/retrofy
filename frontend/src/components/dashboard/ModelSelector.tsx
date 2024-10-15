@@ -13,15 +13,20 @@ import useStore from '@/store'
 const ModelSelector = () => {
   const setSelectedModel = useStore((state) => state.setSelectedModel)
   const selectedModel = useStore((state) => state.selectedModel)
-
+  const resetModelParameters = useStore((state) => state.resetModelParameters)
   const handleModelChange = (model: FilterModels) => {
+    resetModelParameters()
     setSelectedModel(model)
   }
 
   return (
     <div className="grid gap-3">
-      <Label htmlFor="model" className="text-md">
-        Model
+      <h3 className="text-md font-medium">Model Settings</h3>
+      <Label htmlFor="model">
+        Model Filter
+        <p className="text-sm text-muted-foreground mt-2">
+          Select a filter model to apply to your image.
+        </p>
       </Label>
       <Select onValueChange={handleModelChange} value={selectedModel ?? ''}>
         <SelectTrigger

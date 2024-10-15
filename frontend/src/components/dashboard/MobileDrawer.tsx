@@ -20,7 +20,10 @@ const MobileDrawer = () => {
           <span className="sr-only">Settings</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="w-[400px] sm:w-[540px] h-full">
+      <SheetContent
+        side="left"
+        className="w-[400px] sm:w-[540px] max-h-screen overflow-y-auto"
+      >
         <SheetHeader className="mb-4">
           <SheetTitle>Configuration</SheetTitle>
           <SheetDescription>

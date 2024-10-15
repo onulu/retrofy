@@ -31,14 +31,14 @@ const ImagePreview = () => {
               <ReactCompareSliderImage
                 alt="original image"
                 src={originalImage.url}
-                className="object-cover max-h-[calc(100vh-100px)]"
+                className="object-contain max-h-[calc(100vh-100px)]"
               />
             }
             itemTwo={
               <ReactCompareSliderImage
                 alt="enhanced image"
                 src={enhancedImage?.url || undefined}
-                className="object-cover  max-h-[calc(100vh-100px)]"
+                className="object-contain  max-h-[calc(100vh-100px)]"
               />
             }
           />

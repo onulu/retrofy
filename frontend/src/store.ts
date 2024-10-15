@@ -13,7 +13,7 @@ interface Store {
   setOriginalImage: (image: File) => void
   setEnhancedImage: (image: Blob | null) => void
   setSelectedModel: (model: FilterModels) => void
-  setModelParameters: (parameters: FilterParams) => void
+  setModelParameters: (parameters: Record<string, number | string>) => void
   setProcessing: (isProcessing: boolean) => void
   setAppError: (error: string) => void
   resetState: () => void
@@ -26,6 +26,7 @@ const useStore = create<Store>((set, get) => ({
   enhancedImage: null,
   selectedModel: null,
   modelParameters: null,
+  commonParameters: null,
   isProcessing: false,
   appError: null,
 
@@ -55,7 +56,10 @@ const useStore = create<Store>((set, get) => ({
   },
   setModelParameters: (parameters) => {
     set((state) => ({
-      modelParameters: { ...state.modelParameters, ...parameters },
+      modelParameters: {
+        ...state.modelParameters,
+        ...parameters,
+      } as FilterParams,
     }))
   },
   setProcessing: (isProcessing) => set({ isProcessing }),

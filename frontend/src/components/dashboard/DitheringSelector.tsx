@@ -33,7 +33,7 @@ const DitheringSelector = () => {
             resetModelParameters()
             setModelParameters({ type: value })
           }}
-          value={modelParameters.type}
+          value={modelParameters?.type || ''}
         >
           <SelectTrigger>
             <SelectValue placeholder="Select a dithering type" />
@@ -48,6 +48,7 @@ const DitheringSelector = () => {
       <div className="grid gap-3">
         <Label htmlFor="color-mode">Color Mode</Label>
         <Select
+          value={modelParameters?.colorMode || ''}
           onValueChange={(value) => {
             setModelParameters({
               colorMode: value,
@@ -63,13 +64,13 @@ const DitheringSelector = () => {
           </SelectContent>
         </Select>
       </div>
-      {modelParameters.colorMode === 'grayscale' &&
-        modelParameters.type === 'floyd_steinberg' && (
+      {modelParameters?.colorMode === 'grayscale' &&
+        modelParameters?.type === 'floyd_steinberg' && (
           <div className="grid gap-6">
             <div className="grid grid-cols-[1fr_auto] gap-2">
               <Label htmlFor="grayscale-level">Gray Scale Level</Label>
               <span className="text-sm text-muted-foreground border border-muted rounded-md px-2 py-1 w-10 text-right">
-                {modelParameters.grayscaleLevel || 4}
+                {modelParameters?.grayscaleLevel || 4}
               </span>
             </div>
             <Slider
@@ -77,16 +78,22 @@ const DitheringSelector = () => {
               min={2}
               max={8}
               defaultValue={[4]}
+              value={
+                modelParameters?.grayscaleLevel
+                  ? [modelParameters.grayscaleLevel]
+                  : [4]
+              }
               onValueChange={(value) =>
                 setModelParameters({ grayscaleLevel: value[0] })
               }
             />
           </div>
         )}
-      {modelParameters.colorMode === 'rgb' && (
+      {modelParameters?.colorMode === 'rgb' && (
         <div className="grid gap-3">
           <Label htmlFor="palette-name">Color Palette</Label>
           <Select
+            value={modelParameters?.paletteName || ''}
             onValueChange={(value) => {
               setModelParameters({
                 paletteName: value,
@@ -104,7 +111,7 @@ const DitheringSelector = () => {
               ))}
             </SelectContent>
           </Select>
-          {modelParameters.paletteName && (
+          {modelParameters?.paletteName && (
             <div className="grid grid-cols-8 gap-4 p-4 border border-muted rounded-md bg-card/50">
               {PALETTES[
                 modelParameters.paletteName as keyof typeof PALETTES
@@ -121,12 +128,17 @@ const DitheringSelector = () => {
           )}
         </div>
       )}
-      {modelParameters.type === 'bayer' && (
+      {modelParameters?.type === 'bayer' && (
         <div className="grid gap-3">
           <Label htmlFor="matrix-size">Matrix Size</Label>
           <Select
+            value={
+              modelParameters?.matrixSize
+                ? '' + modelParameters.matrixSize
+                : '2'
+            }
             onValueChange={(value) => {
-              setModelParameters({ matrixSize: value })
+              setModelParameters({ matrixSize: Number(value) })
             }}
           >
             <SelectTrigger>
@@ -140,6 +152,33 @@ const DitheringSelector = () => {
           </Select>
         </div>
       )}
+      <div className="grid gap-3">
+        <div className="grid gap-2">
+          <Label htmlFor="pixelation-size">Pixelation Size</Label>
+          <p className="text-sm text-muted-foreground">
+            If you want to pixelate the image, set the pixel size to a value
+            greater than 0. It works best with the floyd-steinberg dithering.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-[1fr_auto] gap-2">
+          <Slider
+            id="pixelation-size"
+            min={0}
+            max={10}
+            defaultValue={[0]}
+            value={
+              modelParameters?.pixelSize ? [modelParameters.pixelSize] : [0]
+            }
+            onValueChange={(value) =>
+              setModelParameters({ pixelSize: value[0] })
+            }
+          />
+          <span className="text-sm text-muted-foreground border border-muted rounded-md px-2 py-1 w-10 text-right">
+            {modelParameters?.pixelSize || 0}
+          </span>
+        </div>
+      </div>
     </div>
   )
 }

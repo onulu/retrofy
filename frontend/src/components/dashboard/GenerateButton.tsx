@@ -14,7 +14,7 @@ const GenerateButton = () => {
     console.log('selectedModel', selectedModel)
     console.log('modelParameters', modelParameters)
 
-    if (!originalImage || !selectedModel || !modelParameters) return
+    if (!originalImage || !selectedModel) return
 
     try {
       await applyFilter()
@@ -27,7 +27,9 @@ const GenerateButton = () => {
     <Button
       className="self-end"
       onClick={handleGenerate}
-      disabled={!originalImage || !selectedModel || isProcessing}
+      disabled={
+        !originalImage || !selectedModel || isProcessing || !modelParameters
+      }
     >
       {isProcessing ? 'Generating...' : 'Generate'}
     </Button>

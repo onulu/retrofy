@@ -1,3 +1,4 @@
+import { GlitchParams } from '@/types'
 import { Label } from '../ui/label'
 import {
   Select,
@@ -7,16 +8,32 @@ import {
   SelectValue,
 } from '../ui/select'
 import { Slider } from '../ui/slider'
+import useStore from '@/store'
+import { Input } from '../ui/input'
 
 const GlitchSelector = () => {
+  const selectedModel = useStore((state) => state.selectedModel)
+  const modelParameters = useStore(
+    (state) => state.modelParameters
+  ) as GlitchParams
+
+  const setModelParameters = useStore((state) => state.setModelParameters)
+
+  if (!selectedModel) return null
+
+  console.log('modelParameters', modelParameters)
+
   return (
     <div className="grid gap-6">
       <div className="grid gap-3">
-        <Label htmlFor="glitch-direction">Shift Direction</Label>
+        <Label htmlFor="glitch-direction">Color Shift Direction</Label>
         <Select
-          onValueChange={(value) => {
-            console.log(value)
-          }}
+          value={modelParameters?.shiftDirection || ''}
+          onValueChange={(value) =>
+            setModelParameters({
+              shiftDirection: value as 'horizontal' | 'vertical' | 'both',
+            })
+          }
         >
           <SelectTrigger>
             <SelectValue placeholder="Select a color shift direction" />
@@ -29,20 +46,32 @@ const GlitchSelector = () => {
         </Select>
       </div>
       <div className="grid gap-3">
-        <Label htmlFor="glitch-shift-amount">Shift Amount</Label>
+        <div className="grid grid-cols-[1fr_auto] gap-2">
+          <Label htmlFor="glitch-shift-amount">Color Shift Amount</Label>
+          <span className="text-sm text-muted-foreground border border-muted rounded-md px-2 py-1 w-10 text-right">
+            {modelParameters?.shiftAmount || 15}
+          </span>
+        </div>
         <Slider
           id="glitch-shift-amount"
-          min={0}
+          min={1}
           max={20}
           step={1}
-          value={[5]}
+          defaultValue={[15]}
+          value={
+            modelParameters?.shiftAmount ? [modelParameters.shiftAmount] : [5]
+          }
+          onValueChange={(value) =>
+            setModelParameters({ shiftAmount: value[0] })
+          }
         />
       </div>
       <div className="grid gap-3">
         <Label htmlFor="glitch-noise-type">Noise Type</Label>
         <Select
+          value={modelParameters?.noiseType || 'gaussian'}
           onValueChange={(value) => {
-            console.log(value)
+            setModelParameters({ noiseType: value })
           }}
         >
           <SelectTrigger>
@@ -54,6 +83,19 @@ const GlitchSelector = () => {
             <SelectItem value="speckle">Speckle</SelectItem>
           </SelectContent>
         </Select>
+      </div>
+      <div className="grid gap-3">
+        <Label htmlFor="glitch-noise-strength">Noise Strength</Label>
+        <Input
+          type="number"
+          value={modelParameters?.noiseStrength || 0.1}
+          min={0}
+          max={1}
+          step={0.1}
+          onChange={(e) =>
+            setModelParameters({ noiseStrength: Number(e.target.value) })
+          }
+        />
       </div>
     </div>
   )
