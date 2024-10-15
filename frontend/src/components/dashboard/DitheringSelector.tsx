@@ -12,23 +12,17 @@ import { Slider } from '../ui/slider'
 import { DitheringParams, ColorPalettes } from '@/types'
 import { PALETTES } from '@/utils'
 
-const DEFAULT_PARAMS = {
-  grayscale: {
-    grayscaleLevel: 4,
-  },
-  rgb: {
-    paletteName: 'zx_spectrum',
-  },
-}
-
 const DitheringSelector = () => {
   const selectedModel = useStore((state) => state.selectedModel)
   const modelParameters = useStore(
     (state) => state.modelParameters
   ) as DitheringParams
+  const resetModelParameters = useStore((state) => state.resetModelParameters)
   const setModelParameters = useStore((state) => state.setModelParameters)
 
   if (!selectedModel) return null
+
+  console.log('modelParameters', modelParameters)
 
   return (
     <div className="grid gap-6">
@@ -36,12 +30,8 @@ const DitheringSelector = () => {
         <Label htmlFor="dithering-type">Dithering Type</Label>
         <Select
           onValueChange={(value) => {
+            resetModelParameters()
             setModelParameters({ type: value })
-            // reset params
-            setModelParameters({
-              colorMode: 'grayscale',
-              grayscaleLevel: 4,
-            })
           }}
           value={modelParameters.type}
         >
@@ -55,28 +45,26 @@ const DitheringSelector = () => {
         </Select>
       </div>
 
-      <>
-        <div className="grid gap-3">
-          <Label htmlFor="color-mode">Color Mode</Label>
-          <Select
-            onValueChange={(value) => {
-              setModelParameters({
-                colorMode: value,
-                ...DEFAULT_PARAMS[value as keyof typeof DEFAULT_PARAMS],
-              })
-            }}
-            value={modelParameters.colorMode as string}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select color mode" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="grayscale">Grayscale</SelectItem>
-              <SelectItem value="rgb">Color</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        {modelParameters.colorMode === 'grayscale' && (
+      <div className="grid gap-3">
+        <Label htmlFor="color-mode">Color Mode</Label>
+        <Select
+          onValueChange={(value) => {
+            setModelParameters({
+              colorMode: value,
+            })
+          }}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select color mode" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="grayscale">Grayscale</SelectItem>
+            <SelectItem value="rgb">Color</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      {modelParameters.colorMode === 'grayscale' &&
+        modelParameters.type === 'floyd_steinberg' && (
           <div className="grid gap-6">
             <div className="grid grid-cols-[1fr_auto] gap-2">
               <Label htmlFor="grayscale-level">Gray Scale Level</Label>
@@ -87,54 +75,52 @@ const DitheringSelector = () => {
             <Slider
               id="grayscale-level"
               min={2}
-              max={16}
+              max={8}
               defaultValue={[4]}
-              value={[(modelParameters.grayscaleLevel as number) || 4]}
               onValueChange={(value) =>
                 setModelParameters({ grayscaleLevel: value[0] })
               }
             />
           </div>
         )}
-        {modelParameters.colorMode === 'rgb' && (
-          <div className="grid gap-3">
-            <Label htmlFor="palette-name">Color Palette</Label>
-            <Select
-              onValueChange={(value) => {
-                setModelParameters({
-                  paletteName: value,
-                })
-              }}
-              value={modelParameters.paletteName as string}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select color palette" />
-              </SelectTrigger>
-              <SelectContent>
-                {Object.values(ColorPalettes).map((palette) => (
-                  <SelectItem key={palette} value={palette}>
-                    {palette}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <div className="grid grid-cols-8 gap-4 p-4 border border-muted rounded-md">
+      {modelParameters.colorMode === 'rgb' && (
+        <div className="grid gap-3">
+          <Label htmlFor="palette-name">Color Palette</Label>
+          <Select
+            onValueChange={(value) => {
+              setModelParameters({
+                paletteName: value,
+              })
+            }}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select color palette" />
+            </SelectTrigger>
+            <SelectContent>
+              {Object.values(ColorPalettes).map((palette) => (
+                <SelectItem key={palette} value={palette}>
+                  {palette}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {modelParameters.paletteName && (
+            <div className="grid grid-cols-8 gap-4 p-4 border border-muted rounded-md bg-card/50">
               {PALETTES[
                 modelParameters.paletteName as keyof typeof PALETTES
-              ].map((color, index) => (
+              ].map(({ color }, index) => (
                 <div
                   key={index}
-                  className="w-4 h-4 rounded-full border border-white/20"
-                  data-color={color.color}
-                  data-name={color.name}
-                  style={{ backgroundColor: color.color }}
+                  className="w-4 h-4 rounded-full border border-foreground/30"
+                  data-color={color}
+                  data-name={color}
+                  style={{ backgroundColor: color }}
                 />
               ))}
             </div>
-          </div>
-        )}
-      </>
-
+          )}
+        </div>
+      )}
       {modelParameters.type === 'bayer' && (
         <div className="grid gap-3">
           <Label htmlFor="matrix-size">Matrix Size</Label>
@@ -142,7 +128,6 @@ const DitheringSelector = () => {
             onValueChange={(value) => {
               setModelParameters({ matrixSize: value })
             }}
-            value={modelParameters.matrixSize?.toString() ?? '4'}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select matrix size" />

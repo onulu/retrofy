@@ -6,8 +6,10 @@ export enum ColorPalettes {
   GAMEBOY = 'gameboy',
   CGA = 'cga',
   EGA = 'ega',
-  VGA = 'vga',
   GRAYSCALE = 'grayscale',
+  RGB = 'rgb',
+  SUNSET = 'sunset',
+  HOLLOW = 'hollow',
 }
 
 export enum FilterModels {
@@ -26,7 +28,10 @@ export type DitheringParams = {
 }
 
 export type GlitchParams = {
+  shiftDirection: 'horizontal' | 'vertical' | 'both'
   shiftAmount?: number
+  noiseType: 'gaussian' | 'salt_pepper' | 'speckle'
+  noiseStrength?: number
 }
 
 export type FilterParams = DitheringParams | GlitchParams
