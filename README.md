@@ -1,4 +1,4 @@
-# Enhancify: AI 기반 레트로 이미지 필터 툴
+# Retrofy: AI 기반 레트로 이미지 필터 툴
 
 ## 프로젝트 개요
 
@@ -42,9 +42,8 @@ image-enhancement-tool/
 │   ├── public/
 │   └── package.json
 ├── backend/
-│   ├── app.py
-├── README.md
-└── docker-compose.yml
+│   └── app.py
+└── README.md
 ```
 
 ## API 엔드포인트
