@@ -30,7 +30,7 @@ def adjust_brightness(image: np.ndarray):
 def pixelate(image, pixel_size):
     h, w = image.shape[:2]
     small = cv2.resize(
-        image, (w // pixel_size, h // pixel_size), interpolation=cv2.INTER_LINEAR
+        image, (w // pixel_size, h // pixel_size), interpolation=cv2.INTER_NEAREST
     )
     return cv2.resize(small, (w, h), interpolation=cv2.INTER_NEAREST)
 
@@ -43,10 +43,12 @@ def add_scanlines(image, intensity=0.1):
     return cv2.addWeighted(image, 1, scanlines, intensity, 0)
 
 
-def color_shift(image, shift_amount):
-    b, g, r = cv2.split(image)
-    # random shift
-    b = np.roll(b, np.random.randint(-shift_amount, shift_amount), axis=0)
-    g = np.roll(g, np.random.randint(-shift_amount, shift_amount), axis=0)
-
-    return cv2.merge([b, g, r])
+def compress_image(image, format="jpg", quality=95):
+    if format == "jpg":
+        return cv2.imencode(f".{format}", image, [cv2.IMWRITE_JPEG_QUALITY, quality])
+    elif format == "png":
+        return cv2.imencode(f".{format}", image, [cv2.IMWRITE_PNG_COMPRESSION, quality])
+    elif format == "webp":
+        return cv2.imencode(f".{format}", image, [cv2.IMWRITE_WEBP_QUALITY, quality])
+    else:
+        raise ValueError(f"Unsupported format: {format}")

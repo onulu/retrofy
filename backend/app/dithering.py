@@ -11,37 +11,47 @@ from .image_processing import pixelate, resize_image, adjust_brightness
 # 2. 베이어 디더링
 
 
-def find_nearest_color(palette, color):
-    distances = np.sqrt(np.sum((palette - color) ** 2, axis=1))
-    return palette[np.argmin(distances)]
+def find_nearest_colors_vectorized(
+    palette: np.ndarray, pixels: np.ndarray
+) -> np.ndarray:
+    distances = np.linalg.norm(pixels[:, np.newaxis] - palette, axis=2)
+    nearest_indices = np.argmin(distances, axis=1)
+    return palette[nearest_indices]
+
+
+def find_nearest_color(palette: np.ndarray, color: np.ndarray) -> np.ndarray:
+    distances = np.sum(np.abs(palette - color), axis=1)
+    nearest_index = np.argmin(distances)
+    return palette[nearest_index]
 
 
 def rgb_dithering(image: np.ndarray, palette_name: str = None):
+    image = image.copy().astype(np.float32)
     h, w = image.shape[:2]
-    image = resize_image(image, 800)
-    # image = pixelate(image, 10)
-    image = image.astype(float)
 
     if palette_name and palette_name in PALETTES:
-        palette = PALETTES[palette_name]
+        palette = np.array(PALETTES[palette_name], dtype=np.float32)
     else:
         raise ValueError("Invalid palette name")
 
+    output_image = np.copy(image)
+    error = np.zeros_like(output_image)
+
     for y in range(h):
         for x in range(w):
-            old_pixel = image[y, x]
+            old_pixel = output_image[y, x] + error[y, x]
             new_pixel = find_nearest_color(palette, old_pixel)
-            image[y, x] = new_pixel
+            output_image[y, x] = new_pixel
             quant_error = old_pixel - new_pixel
             if x + 1 < w:
-                image[y, x + 1] += quant_error * 7 / 16
-            if y + 1 < h and x - 1 >= 0:
-                image[y + 1, x - 1] += quant_error * 3 / 16
+                error[y, x + 1] += quant_error * 7 / 16
             if y + 1 < h:
-                image[y + 1, x] += quant_error * 5 / 16
-            if y + 1 < h and x + 1 < w:
-                image[y + 1, x + 1] += quant_error * 1 / 16
-    return np.clip(image, 0, 255).astype(np.uint8)
+                if x > 0:
+                    error[y + 1, x - 1] += quant_error * 3 / 16
+                error[y + 1, x] += quant_error * 5 / 16
+                if x + 1 < w:
+                    error[y + 1, x + 1] += quant_error * 1 / 16
+    return np.clip(output_image, 0, 255).astype(np.uint8)
 
 
 def gray_dithering(image: np.ndarray, grayscale_level: int):
@@ -94,35 +104,35 @@ def generate_bayer_matrix(n):
             dtype=float,
         )
     # 정규화
-    result = (matrix + 0.5) / (matrix * matrix)
+    result = (matrix + 0.5) / (n * n)
     return result
 
 
 def rgb_bayer_dithering(image: np.ndarray, palette_name: str, matrix_size: int):
     bayer_matrix = generate_bayer_matrix(matrix_size)
-
     h, w = image.shape[:2]
-
-    image = image.astype(float)
+    image = image.astype(np.float32)
 
     if palette_name and palette_name in PALETTES:
-        palette = PALETTES[palette_name]
+        palette = np.array(PALETTES[palette_name], dtype=np.float32)
     else:
         raise ValueError("Invalid palette name")
 
-    for y in range(h):
-        for x in range(w):
-            old_pixel = image[y, x]
-            i = y % bayer_matrix.shape[0]
-            j = x % bayer_matrix.shape[1]
-            threshold = bayer_matrix[i, j]
+    tiled_bayer = np.tile(
+        bayer_matrix, (int(np.ceil(h / matrix_size)), int(np.ceil(w / matrix_size)))
+    )
+    tiled_bayer = tiled_bayer[:h, :w]
 
-            new_pixel = old_pixel + (threshold - 0.5) * 255
-            new_pixel = np.clip(new_pixel, 0, 255)
-            new_pixel = find_nearest_color(palette, new_pixel)
-            image[y, x] = new_pixel
+    threshold = (tiled_bayer - 0.5) * 255
 
-    return image.astype(np.uint8)
+    new_image = image + threshold[:, :, np.newaxis]
+    new_image = np.clip(new_image, 0, 255)
+
+    pixels = new_image.reshape(-1, new_image.shape[-1])
+
+    nearest_colors = find_nearest_colors_vectorized(palette, pixels)
+    new_image = nearest_colors.reshape(h, w, -1)
+    return new_image.astype(np.uint8)
 
 
 def gray_bayer_dithering(image: np.ndarray, matrix_size: int = 4):

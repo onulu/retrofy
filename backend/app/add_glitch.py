@@ -6,9 +6,10 @@ from .add_noise import add_noise
 
 def add_glitch(
     image: np.ndarray,
-    shift_amount: int = 5,
-    direction: str = "both",
-    noise_type: str = "gaussian",
+    shift_amount: int,
+    direction: str,
+    noise_type: str,
+    noise_strength: float,
 ):
     h, w = image.shape[:2]
     image = image.copy()
@@ -50,6 +51,8 @@ def add_glitch(
         )
 
     # 노이즈 추가
-    noisy_image = add_noise(merged_copy, noise_type)
+    noisy_image = add_noise(
+        merged_copy, noise_type=noise_type, noise_strength=noise_strength
+    )
 
     return noisy_image
