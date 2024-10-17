@@ -10,7 +10,8 @@ import numpy as np
 
 from .dithering import apply_floyd_steinberg_dithering, apply_bayer_dithering
 from .add_glitch import add_glitch
-from .image_processing import resize_image, compress_image, pixelate
+from .image_processing import resize_image, compress_image, pixelate, hex_to_bgr
+from .add_halftone import add_halftone
 
 app = FastAPI()
 
@@ -55,7 +56,7 @@ async def apply_dithering(
     image = np.fromstring(await file.read(), np.uint8)
     image = cv2.imdecode(image, cv2.IMREAD_COLOR)
 
-    image = resize_image(image, output_size)
+    image = resize_image(image, max_size=output_size)
     if image is None:
         return JSONResponse(content={"error": "Invalid image format"}, status_code=400)
 
@@ -114,12 +115,13 @@ async def glitch_image(
     noise_type = params.noise_type or "gaussian"
     noise_strength = params.noise_strength or 0.1
     output_size = params.output_size or 640
-    output_format = params.output_format or "png"
+    output_format = params.output_format or "jpg"
     output_quality = params.output_quality or 95
+
     image = np.fromstring(await file.read(), np.uint8)
     image = cv2.imdecode(image, cv2.IMREAD_COLOR)
 
-    image = resize_image(image, max_size=output_size)
+    image = resize_image(image, output_size)
 
     if image is None:
         return JSONResponse(content={"error": "Invalid image format"}, status_code=400)
@@ -147,9 +149,63 @@ async def glitch_image(
     return Response(content=img_bytes, media_type=f"image/{output_format}")
 
 
-@app.post("/noise")
-async def noise_image(file: UploadFile = File(...)):
-    pass
+class HalftoneParameters(BaseModel):
+    size: Optional[int] = None
+    jump: Optional[int] = None
+    bg_color: Optional[str] = None
+    color: Optional[str] = None
+    max_dot_size_ratio: Optional[float] = None
+    output_size: Optional[int] = None
+    output_format: Optional[str] = None
+    output_quality: Optional[int] = None
+
+
+@app.post("/halftone")
+async def halftone_image(
+    file: UploadFile = File(...), params: HalftoneParameters = Depends()
+):
+    size = params.size or 10
+    jump = params.jump or None
+    bg_color = params.bg_color or "#ffffff"
+    color = params.color or "#000000"
+    max_dot_size_ratio = params.max_dot_size_ratio or 1.4
+
+    output_size = params.output_size or 640
+    output_format = params.output_format or "jpg"
+    output_quality = params.output_quality or 95
+    image = np.fromstring(await file.read(), np.uint8)
+    image = cv2.imdecode(image, cv2.IMREAD_COLOR)
+
+    image = resize_image(image, max_size=output_size)
+
+    if image is None:
+        return JSONResponse(content={"error": "Invalid image format"}, status_code=400)
+
+    processed_image = image.copy()
+
+    bg_color = hex_to_bgr(bg_color)
+    color = hex_to_bgr(color)
+
+    processed_image = add_halftone(
+        processed_image,
+        size=size,
+        jump=jump,
+        bg_color=bg_color,
+        color=color,
+        max_dot_size_ratio=max_dot_size_ratio,
+    )
+
+    processed_image, buffer = compress_image(
+        processed_image, output_format, output_quality
+    )
+
+    # 이미지 데이터를 바이트 스트림으로 변환
+    if not processed_image:
+        return Response(content="Image encoding failed")
+
+    img_bytes = buffer.tobytes()
+
+    return Response(content=img_bytes, media_type=f"image/{output_format}")
 
 
 @app.get("/")

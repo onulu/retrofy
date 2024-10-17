@@ -3,7 +3,7 @@ import numpy as np
 
 
 def resize_image(
-    image: np.ndarray, max_size: int = 1024, interpolation: int = cv2.INTER_AREA
+    image: np.ndarray, max_size: int, interpolation: int = cv2.INTER_AREA
 ) -> np.ndarray:
     h, w = image.shape[:2]
 
@@ -52,3 +52,14 @@ def compress_image(image, format="jpg", quality=95):
         return cv2.imencode(f".{format}", image, [cv2.IMWRITE_WEBP_QUALITY, quality])
     else:
         raise ValueError(f"Unsupported format: {format}")
+
+
+def hex_to_rgb(hex_color: str):
+    hex_color = hex_color.lstrip("#")
+    return tuple(int(hex_color[i : i + 2], 16) for i in (0, 2, 4))
+
+
+def hex_to_bgr(hex_color: str):
+    hex_color = hex_color.lstrip("#")
+    rgb_color = tuple(int(hex_color[i : i + 2], 16) for i in (0, 2, 4))
+    return rgb_color[::-1]

@@ -15,6 +15,7 @@ export enum ColorPalettes {
 export enum FilterModels {
   DITHERING = 'dithering',
   GLITCH = 'glitch',
+  HALFTONE = 'halftone',
   LIGHTLEAKS = 'lightleaks',
   VIGNETTING = 'vignetting',
 }
@@ -33,6 +34,14 @@ export type GlitchParams = {
   shiftAmount?: number
   noiseType?: 'gaussian' | 'salt_pepper' | 'speckle'
   noiseStrength?: number
+} & CommonParams
+
+export type HalftoneParams = {
+  size?: number
+  jump?: number
+  color?: string
+  bgColor?: string
+  maxDotSizeRatio?: number
 } & CommonParams
 
 export type CommonParams = {

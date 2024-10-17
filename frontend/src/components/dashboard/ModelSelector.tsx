@@ -56,12 +56,12 @@ const ModelSelector = () => {
               </div>
             </div>
           </SelectItem>
-          <SelectItem value={FilterModels.LIGHTLEAKS}>
+          <SelectItem value={FilterModels.HALFTONE}>
             <div className="flex items-start gap-3 text-muted-foreground">
               <div className="grid gap-0.5">
-                <p className="font-medium text-foreground">Light Leaks</p>
+                <p className="font-medium text-foreground">Halftone</p>
                 <p className="text-xs" data-description>
-                  If you want the light leaks effect.
+                  If you want the halftone effect.
                 </p>
               </div>
             </div>

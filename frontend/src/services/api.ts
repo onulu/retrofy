@@ -50,6 +50,8 @@ export async function applyFilterLogic(
       return await uploadImageForDithering(file, params)
     case 'glitch':
       return uploadImageForGlitch(file, params)
+    case 'halftone':
+      return uploadImageForHalftone(file, params)
     default:
       console.log('here')
       return file
@@ -69,6 +71,13 @@ export async function uploadImageForGlitch(
   params: Record<string, number | string>
 ): Promise<Blob> {
   return uploadImage('glitch', file, params)
+}
+
+export async function uploadImageForHalftone(
+  file: File,
+  params: Record<string, number | string>
+): Promise<Blob> {
+  return uploadImage('halftone', file, params)
 }
 
 export async function getNoisyImage(

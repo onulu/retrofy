@@ -8,7 +8,7 @@ const Dashboard = () => {
         <ModelMenu />
       </div>
       <div className="rounded-3xl bg-muted lg:col-span-2 h-[calc(100vh-57px-1rem)]">
-        <div className="w-full h-full flex justify-center items-center  ">
+        <div className="w-full h-full flex items-center justify-center">
           <ImagePreview />
         </div>
       </div>

@@ -24,7 +24,8 @@ const GlitchSelector = () => {
   console.log('modelParameters', modelParameters)
 
   return (
-    <div className="grid gap-6">
+    <div className="grid gap-6 bg-card text-card-foreground rounded-xl p-3">
+      <h3 className="text-xs font-medium">GLITCH</h3>
       <div className="grid gap-3">
         <Label htmlFor="glitch-direction">Color Shift Direction</Label>
         <Select

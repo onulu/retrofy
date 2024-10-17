@@ -48,7 +48,7 @@ const ImagePreview = () => {
 
   if (!enhancedImage) {
     return (
-      <div className="w-full h-[calc(100vh-100px)] flex items-center justify-center">
+      <div className="w-full h-[calc(90vh)] flex items-center justify-center">
         <img
           src={originalImage.url}
           alt="Original Image"
@@ -61,21 +61,23 @@ const ImagePreview = () => {
   return (
     <>
       <ReactCompareSlider
-        className="flex items-center justify-center"
+        className="h-full w-full flex max-w-[826px] items-center justify-center"
         itemOne={
           <ReactCompareSliderImage
             alt="original image"
             src={originalImage.url}
-            className="max-w-full max-h-full w-auto h-auto object-contain"
+            className="max-h-[90vh] object-contain"
           />
         }
         itemTwo={
           <ReactCompareSliderImage
             alt="enhanced image"
             src={enhancedImage?.url || undefined}
-            className="max-w-full max-h-full w-auto h-auto object-contain"
+            className="max-h-[90vh] object-contain"
           />
         }
+        style={{ height: '100%', width: '100%' }}
+        handle={<div className="w-1 h-full bg-white" />}
       />
     </>
   )
