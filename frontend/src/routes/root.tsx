@@ -1,22 +1,15 @@
-import { Link, Outlet } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import { ThemeProvider } from '@/components/theme-provider'
-import { Button } from '@/components/ui/button'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
-import { Bot, Triangle } from 'lucide-react'
+
 import ModeToggle from '@/components/mode-toggle'
 import MobileDrawer from '@/components/dashboard/MobileDrawer'
 
 export default function Root() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <div className="border relative grid w-full max-w-screen-xl h-screen md:mx-auto">
+      <div className="relative grid w-full max-w-screen-xl h-screen md:mx-auto">
         <div className="flex flex-col">
-          <header className="w-full flex h-[57px] items-center gap-1 border-b px-4">
+          <header className="w-full flex h-[57px] items-center gap-1 px-4">
             <nav className="flex">
               <ModeToggle />
               <MobileDrawer />

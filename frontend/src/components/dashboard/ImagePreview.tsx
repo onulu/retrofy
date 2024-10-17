@@ -21,61 +21,62 @@ const ImagePreview = () => {
     }
   }
 
+  if (!originalImage) {
+    return (
+      <>
+        <input
+          type="file"
+          id="upload-image"
+          accept="image/*"
+          multiple={false}
+          className="hidden"
+          onChange={handleImageChange}
+        />
+        <Button
+          variant="outline"
+          aria-label="Upload image"
+          onClick={() => {
+            document.getElementById('upload-image')?.click()
+          }}
+        >
+          <Upload className="mr-2" />
+          Choose image
+        </Button>
+      </>
+    )
+  }
+
+  if (!enhancedImage) {
+    return (
+      <div className="w-full h-[calc(100vh-100px)] flex items-center justify-center">
+        <img
+          src={originalImage.url}
+          alt="Original Image"
+          className="max-w-full max-h-full w-auto h-auto object-contain"
+        />
+      </div>
+    )
+  }
+
   return (
     <>
-      {originalImage ? (
-        <>
-          <ReactCompareSlider
-            className="max-h-[calc(100vh-100px)]"
-            itemOne={
-              <ReactCompareSliderImage
-                alt="original image"
-                src={originalImage.url}
-                className="object-contain max-h-[calc(100vh-100px)]"
-              />
-            }
-            itemTwo={
-              <ReactCompareSliderImage
-                alt="enhanced image"
-                src={enhancedImage?.url || undefined}
-                className="object-contain  max-h-[calc(100vh-100px)]"
-              />
-            }
-          />
-          {/* <img
+      <ReactCompareSlider
+        className="flex items-center justify-center"
+        itemOne={
+          <ReactCompareSliderImage
+            alt="original image"
             src={originalImage.url}
-            className="max-h-[90vh] object-cover"
-            alt="Original image"
+            className="max-w-full max-h-full w-auto h-auto object-contain"
           />
-          {enhancedImage && (
-            <img
-              src={enhancedImage.url}
-              className="max-h-[90vh] object-cover"
-              alt="enhanced image"
-            />
-          )} */}
-        </>
-      ) : (
-        <>
-          <input
-            type="file"
-            id="upload-image"
-            accept="image/*"
-            multiple={false}
-            className="hidden"
-            onChange={handleImageChange}
+        }
+        itemTwo={
+          <ReactCompareSliderImage
+            alt="enhanced image"
+            src={enhancedImage?.url || undefined}
+            className="max-w-full max-h-full w-auto h-auto object-contain"
           />
-          <Button
-            aria-label="Upload image"
-            onClick={() => {
-              document.getElementById('upload-image')?.click()
-            }}
-          >
-            <Upload className="mr-2" />
-            Choose image
-          </Button>
-        </>
-      )}
+        }
+      />
     </>
   )
 }

@@ -13,7 +13,7 @@ const ImageUploader = () => {
     const maxSizeInBytes = 3 * 1024 * 1024 // 3MB
 
     if (file && file.size > maxSizeInBytes) {
-      console.log('파일 크기는 3MB를 초과할 수 없습니다.')
+      console.log('File size exceeds the limit of 3MB.')
       e.target.value = ''
     }
     if (file) {
@@ -23,10 +23,10 @@ const ImageUploader = () => {
   }
 
   return (
-    <div className="grid gap-3">
+    <div className="grid gap-3 bg-card text-card-foreground rounded-xl p-3">
+      <h2 className="font-medium text-xs mb-2">IMAGE</h2>
       {originalImage && (
         <div className="grid gap-2">
-          <h2 className="font-medium text-md">Selected Image</h2>
           <div className="grid grid-cols-[1fr_auto] gap-4 w-full items-center">
             <p className="text-sm text-muted-foreground">
               {originalImage.file.name}
@@ -46,8 +46,11 @@ const ImageUploader = () => {
         </div>
       )}
       <div className={`flex flex-col gap-2 ${originalImage ? 'hidden' : ''}`}>
-        <Label htmlFor="image-input" className="font-medium text-md">
+        <Label htmlFor="image-input" className="font-normal">
           Select a File
+          <p className="text-sm text-muted-foreground mt-2">
+            Image Size limit: 3MB
+          </p>
         </Label>
         <Input
           id="image-input"

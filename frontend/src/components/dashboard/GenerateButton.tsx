@@ -25,7 +25,8 @@ const GenerateButton = () => {
 
   return (
     <Button
-      className="self-end"
+      className="self-end rounded-2xl"
+      size="lg"
       onClick={handleGenerate}
       disabled={
         !originalImage || !selectedModel || isProcessing || !modelParameters

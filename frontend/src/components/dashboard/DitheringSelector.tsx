@@ -25,9 +25,10 @@ const DitheringSelector = () => {
   console.log('modelParameters', modelParameters)
 
   return (
-    <div className="grid gap-6">
+    <div className="grid gap-4 bg-card text-card-foreground rounded-xl p-3">
+      <h3 className="text-xs font-medium">DITHERING</h3>
       <div className="grid gap-3">
-        <Label htmlFor="dithering-type">Dithering Type</Label>
+        <Label htmlFor="dithering-type">Type</Label>
         <Select
           onValueChange={(value) => {
             resetModelParameters()

@@ -6,14 +6,19 @@ import CommonSelector from './CommonSelector'
 
 const ModelMenu = () => {
   return (
-    <div className="p-2 md:p-4 grid w-full h-[calc(100vh-7rem)] overflow-y-auto items-start gap-6 grid-rows-[auto_1fr]">
-      <div className="grid gap-6 items-start">
-        <ImageUploader />
-        <ModelSelector />
-        <ParameterSelector />
+    <div className="grid w-full md:h-[calc(100vh-89px)] items-start gap-3 grid-rows-[auto_1fr]">
+      <h2 className="mt-4 ml-2 text-md font-medium text-foreground">
+        Filter properties
+      </h2>
+      <div className="h-full overflow-y-auto grid grid-rows-[auto_1fr] gap-2">
+        <div className="grid gap-2 items-start">
+          <ImageUploader />
+          <ModelSelector />
+          <ParameterSelector />
+          <CommonSelector />
+        </div>
+        <GenerateButton />
       </div>
-      <CommonSelector />
-      <GenerateButton />
     </div>
   )
 }

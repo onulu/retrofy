@@ -22,7 +22,7 @@ const MobileDrawer = () => {
       </SheetTrigger>
       <SheetContent
         side="left"
-        className="w-[400px] sm:w-[540px] max-h-screen overflow-y-auto"
+        className="pb-4 w-[400px] sm:w-[540px] max-h-screen overflow-y-scroll"
       >
         <SheetHeader className="mb-4">
           <SheetTitle>Configuration</SheetTitle>

@@ -20,8 +20,8 @@ const ModelSelector = () => {
   }
 
   return (
-    <div className="grid gap-3">
-      <h3 className="text-md font-medium">Model Settings</h3>
+    <div className="grid gap-3 bg-card text-card-foreground rounded-xl p-3">
+      <h3 className="text-xs font-medium mb-2">FILTER</h3>
       <Label htmlFor="model">
         Model Filter
         <p className="text-sm text-muted-foreground mt-2">
