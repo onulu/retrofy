@@ -1,4 +1,4 @@
-# Retrofy: AI 기반 레트로 이미지 필터 툴
+# Retrofy: OpenCV-based image filter tool that transforms photos into retro-style images.
 
 ## 프로젝트 개요
 
@@ -31,14 +31,9 @@ OpenCV 기반 이미지 효과 웹앱.
 ## 프로젝트 구조
 
 ```text
-image-enhancement-tool/
+Repo/
 ├── frontend/
 │   ├── src/
-│   │   ├── components/
-│   │   ├── routes/
-│   │   ├── services/
-│   │   ├── App.js
-│   │   └── index.js
 │   ├── public/
 │   └── package.json
 ├── backend/
@@ -50,4 +45,4 @@ image-enhancement-tool/
 
 - `/dithering`: floyd-steinberg 혹은 bayer 디더링 적용
 - `/glitch`: glitch 효과 적용
-
+- `/halftone`: halftone 효과 적용 (https://github.com/GravO8/halftone)
