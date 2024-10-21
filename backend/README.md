@@ -1,4 +1,4 @@
-# backend
+# Retrofy: backend
 
 이 프로젝트는 rye로 관리되며 별도의 가상환경 activation이 필요하지 않다.
 
@@ -20,3 +20,8 @@ rye sync
 rye uvicorn main:app --reload
 ```
 
+## 디버그 모드로 실행하고
+
+```shell
+rye run uvicorn app.main:app --reload --log-level debug
+```

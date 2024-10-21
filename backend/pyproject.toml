@@ -1,16 +1,15 @@
 [project]
-name = "backend"
+name = "retrofy_backend"
 version = "0.1.0"
 description = "Add your description here"
 authors = [
-    { name = "onulu", email = "123046744+onulu@users.noreply.github.com" }
+    { name = "onulu", email = "hi.onulu@gmail.com" }
 ]
 dependencies = [
     "fastapi>=0.114.2",
     "uvicorn>=0.30.6",
     "python-multipart>=0.0.9",
     "opencv-python-headless>=4.10.0.84",
-    "scikit-learn>=1.5.2",
 ]
 readme = "README.md"
 requires-python = ">= 3.8"

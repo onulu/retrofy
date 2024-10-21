@@ -68,7 +68,7 @@
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-secondary;
+    @apply bg-transparent;
   }
 
   ::-webkit-scrollbar-thumb {

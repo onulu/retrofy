@@ -14,7 +14,7 @@ const CommonSelector = () => {
   const modelParameters = useStore((state) => state.modelParameters)
 
   return (
-    <div className="grid gap-4 self-end bg-card text-card-foreground rounded-xl p-3">
+    <div className="grid gap-4 self-start bg-card text-card-foreground rounded-xl p-3">
       <h3 className="text-xs font-medium">IMAGE OUTPUT</h3>
       <div className="grid gap-3">
         <Label htmlFor="image-output-size">Image Size</Label>
