@@ -1,0 +1,29 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.11
+    commands:
+      - cd backend
+      - curl -sSf https://rye-up.com/get | bash
+      - source "$HOME/.rye/env"
+
+  pre_build:
+    commands:
+      - rye sync
+      - rye export -f requirements.txt > requirements.txt
+
+  build:
+    commands:
+      - rye build
+
+  post_build:
+    commands:
+      - echo Build completed on `date`
+
+artifacts:
+  base-directory: 'backend'  # backend 폴더를 기준으로 아티팩트 수집
+  files:
+    - '**/*'
+    - '.ebextensions/**/*'
