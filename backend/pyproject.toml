@@ -1,7 +1,7 @@
 [project]
-name = "retrofy_backend"
+name = "retrofy-backend"
 version = "0.1.0"
-description = "Add your description here"
+description = "Backend for retrofy app"
 authors = [
     { name = "onulu", email = "hi.onulu@gmail.com" }
 ]

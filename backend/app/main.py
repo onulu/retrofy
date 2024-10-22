@@ -7,6 +7,7 @@ from typing import Optional
 
 import cv2
 import numpy as np
+import os
 
 from .dithering import apply_floyd_steinberg_dithering, apply_bayer_dithering
 from .add_glitch import add_glitch
@@ -15,12 +16,14 @@ from .add_halftone import add_halftone
 
 app = FastAPI()
 
-origins = ["http://localhost", "http://localhost:5173"]
+origins = [
+    os.getenv("CORS_ORIGINS", "http://localhost:5173")
+]  # 기본값으로 로컬 개발 환경 추가
 
 # CORS 설정
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # React 앱의 주소
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
