@@ -1,6 +1,7 @@
+import { Analytics } from '@vercel/analytics/react'
+
 import { Outlet } from 'react-router-dom'
 import { ThemeProvider } from '@/components/theme-provider'
-
 import ModeToggle from '@/components/mode-toggle'
 import MobileDrawer from '@/components/dashboard/MobileDrawer'
 
@@ -21,6 +22,7 @@ export default function Root() {
           <Outlet />
         </div>
       </div>
+      <Analytics />
     </ThemeProvider>
   )
 }
