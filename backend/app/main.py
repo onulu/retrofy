@@ -9,10 +9,10 @@ import cv2
 import numpy as np
 import os
 
-from .dithering import apply_floyd_steinberg_dithering, apply_bayer_dithering
-from .add_glitch import add_glitch
-from .image_processing import resize_image, compress_image, pixelate, hex_to_bgr
-from .add_halftone import add_halftone
+from .utils.dithering import apply_floyd_steinberg_dithering, apply_bayer_dithering
+from .utils.add_glitch import add_glitch
+from .utils.image_processing import resize_image, compress_image, pixelate, hex_to_bgr
+from .utils.add_halftone import add_halftone
 
 app = FastAPI()
 
@@ -213,4 +213,9 @@ async def halftone_image(
 
 @app.get("/")
 async def read_root():
-    return {"message": "Welcome to Enhancify API"}
+    return {"message": "Welcome to Retrofy API :)"}
+
+
+@app.get("/health")
+async def health_check():
+    return {"status": "ok"}

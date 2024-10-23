@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-from sklearn.cluster import KMeans
 
 from .palette_presets import PALETTES
 from .image_processing import pixelate, resize_image, adjust_brightness
