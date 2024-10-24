@@ -5,8 +5,8 @@ import Root from './routes/root'
 import ErrorPage from './error-page'
 import Index from './routes'
 import About from './routes/about'
-import DashboardRoute from './routes/dashboard'
 import useStore from './store'
+import ProtectedRoute from './components/ProtectedRoute'
 
 const router = createBrowserRouter([
   {
@@ -14,14 +14,17 @@ const router = createBrowserRouter([
     element: <Root />,
     errorElement: <ErrorPage />,
     children: [
-      { index: true, element: <Index /> },
+      {
+        index: true,
+        element: (
+          <ProtectedRoute>
+            <Index />
+          </ProtectedRoute>
+        ),
+      },
       {
         path: '/about',
         element: <About />,
-      },
-      {
-        path: '/dashboard',
-        element: <DashboardRoute />,
       },
     ],
   },
