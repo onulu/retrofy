@@ -1,9 +1,10 @@
 from pydantic import BaseModel
 
-from fastapi import FastAPI, File, UploadFile, Depends
+from fastapi import FastAPI, File, HTTPException, UploadFile, Depends
 from fastapi.responses import Response, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional
+from secrets import compare_digest
 
 import cv2
 import numpy as np
@@ -18,11 +19,23 @@ from .utils.add_halftone import add_halftone
 
 load_dotenv()
 
+ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
+
 app = FastAPI()
 
-origins = [
-    os.getenv("CORS_ORIGINS", "http://localhost:5173")
-]  # 기본값으로 로컬 개발 환경 추가
+if ENVIRONMENT == "production":
+    origins = [
+        "https://retrofy.pics",
+        "https://retrofy.vercel.app",
+    ]
+else:
+    # 개발 환경일 경우 localhost 추가
+    origins = [
+        "http://localhost:5173",
+        "https://retrofy.pics",
+        "https://retrofy.vercel.app",
+    ]
+
 
 # CORS 설정
 app.add_middleware(
@@ -223,3 +236,20 @@ async def read_root():
 @app.get("/health")
 async def health_check():
     return {"status": "ok"}
+
+
+class PasscodeCheck(BaseModel):
+    passcode: str
+
+
+@app.post("/check-passcode")
+async def check_passcode(passcode_data: PasscodeCheck):
+    correct_passcode = os.getenv("PASSCODE")
+
+    if correct_passcode is None:
+        raise HTTPException(status_code=500, detail="Server configuration error")
+
+    if compare_digest(passcode_data.passcode, correct_passcode):
+        return {"message": "Passcode is correct", "success": True}
+    else:
+        raise HTTPException(status_code=401, detail="Incorrect passcode")
