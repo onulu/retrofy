@@ -9,10 +9,14 @@ import cv2
 import numpy as np
 import os
 
+from dotenv import load_dotenv
+
 from .utils.dithering import apply_floyd_steinberg_dithering, apply_bayer_dithering
 from .utils.add_glitch import add_glitch
 from .utils.image_processing import resize_image, compress_image, pixelate, hex_to_bgr
 from .utils.add_halftone import add_halftone
+
+load_dotenv()
 
 app = FastAPI()
 
