@@ -21,7 +21,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (password === DASHBOARD_PASSWORD) {
-      // localStorage.setItem('dashboard_auth', 'true')
+      localStorage.setItem('dashboard_auth', 'true')
       setIsAuthenticated(true)
     } else {
       alert('Invalid password')
