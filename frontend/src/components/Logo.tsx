@@ -54,6 +54,7 @@ const Logo = ({ hideText = false, hideIcon = false }: Props) => {
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         role="img"
+        aria-label="Retrofy"
       >
         <path
           d="M14 4.33334V27.6667M22.2496 7.75043L5.75046 24.2496M25.6667 16H2.33337M22.2496 24.2496L5.75046 7.75043"

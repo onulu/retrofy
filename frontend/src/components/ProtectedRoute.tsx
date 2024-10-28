@@ -3,9 +3,7 @@ import { useEffect, useState } from 'react'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
-
-const DASHBOARD_PASSWORD =
-  import.meta.env.VITE_ACCESS_PASSWORD || process.env.NEXT_ACCESS_PASSWORD
+import { checkPasscode } from '@/services/api'
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -18,9 +16,12 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     }
   }, [])
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (password === DASHBOARD_PASSWORD) {
+    // check with api /check-passcode
+    const response = await checkPasscode(password)
+
+    if (response) {
       localStorage.setItem('dashboard_auth', 'true')
       setIsAuthenticated(true)
     } else {
