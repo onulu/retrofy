@@ -109,3 +109,14 @@ export async function getNoisyImage(
 
   return await response.blob()
 }
+
+export const checkPasscode = async (passcode: string) => {
+  const response = await fetch(`${API_BASE_URL}/check-passcode`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ passcode }),
+  })
+  return response.ok
+}

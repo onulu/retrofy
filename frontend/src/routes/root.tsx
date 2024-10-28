@@ -1,5 +1,3 @@
-import { Analytics } from '@vercel/analytics/react'
-
 import { Link, Outlet } from 'react-router-dom'
 import { ThemeProvider } from '@/components/theme-provider'
 import ModeToggle from '@/components/mode-toggle'
@@ -12,6 +10,7 @@ export default function Root() {
         <div className="flex flex-col">
           <header className="w-full flex h-[57px] items-center gap-1 px-4">
             <Link to="/">
+              <p className="sr-only">Retrofy</p>
               <Logo />
             </Link>
             <nav className="items-center flex ml-auto">
@@ -22,7 +21,6 @@ export default function Root() {
           <Outlet />
         </div>
       </div>
-      <Analytics />
     </ThemeProvider>
   )
 }
