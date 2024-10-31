@@ -41,11 +41,11 @@ def add_glitch(
 
     # 랜덤 글리치 라인 추가 - 이미지의 row? 일부를 잘라서 이동
     merged_copy = merged.copy()
-    num_lines = np.random.randint(1, 5)
+    num_lines = np.random.randint(5, 10)
     for i in range(num_lines):
         y = np.random.randint(0, h)
         height = np.random.randint(1, 5)
-        shift = np.random.randint(-10, 10)
+        shift = np.random.randint(-100, 100)
         merged_copy[y : y + height, :] = np.roll(
             merged_copy[y : y + height, :], shift, axis=1
         )
@@ -56,3 +56,13 @@ def add_glitch(
     )
 
     return noisy_image
+
+
+def apply_glitch_effect(image, params):
+    return add_glitch(
+        image,
+        shift_amount=params.shift_amount,
+        direction=params.direction,
+        noise_type=params.noise_type,
+        noise_strength=params.noise_strength,
+    )

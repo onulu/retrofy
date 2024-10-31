@@ -2,6 +2,8 @@ import numpy as np
 import cv2
 from math import ceil
 
+from .image_processing import hex_to_bgr
+
 
 def add_halftone(
     image: np.ndarray,
@@ -39,3 +41,14 @@ def add_halftone(
         y_output += size
 
     return canvas
+
+
+def apply_halftone_effect(image, params):
+    return add_halftone(
+        image,
+        size=params.size,
+        jump=params.jump,
+        bg_color=hex_to_bgr(params.bg_color),
+        color=hex_to_bgr(params.color),
+        max_dot_size_ratio=params.max_dot_size_ratio,
+    )

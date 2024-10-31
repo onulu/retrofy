@@ -2,12 +2,9 @@ import cv2
 import numpy as np
 
 from .palette_presets import PALETTES
-from .image_processing import pixelate, resize_image, adjust_brightness
+from ..schemas import DitheringParameters
 
-# 디더링
-# 1. 플로이드 슈타이너 디더링
-#    - 파라미터: 그레이 스케일 단계
-# 2. 베이어 디더링
+from .image_processing import pixelate
 
 
 def find_nearest_colors_vectorized(
@@ -42,6 +39,8 @@ def rgb_dithering(image: np.ndarray, palette_name: str = None):
             new_pixel = find_nearest_color(palette, old_pixel)
             output_image[y, x] = new_pixel
             quant_error = old_pixel - new_pixel
+
+            # Distribute the quantization error to the neighboring pixels
             if x + 1 < w:
                 error[y, x + 1] += quant_error * 7 / 16
             if y + 1 < h:
@@ -181,3 +180,26 @@ def apply_floyd_steinberg_dithering(
         return rgb_dithering(image, palette_name)
     else:
         return gray_dithering(image, grayscale_level)
+
+
+def apply_dithering_effect(image, params):
+    """Apply dithering effect based on parameters"""
+    dither_type = params.type
+
+    if dither_type == "floyd_steinberg":
+        return apply_floyd_steinberg_dithering(
+            image,
+            color_mode=params.color_mode,
+            grayscale_level=params.grayscale_level,
+            palette_name=params.palette_name,
+        )
+    elif dither_type == "bayer":
+        return apply_bayer_dithering(
+            image,
+            color_mode=params.color_mode,
+            palette_name=params.palette_name,
+            matrix_size=params.matrix_size,
+        )
+    elif dither_type == "pixelate":
+        return pixelate(image, params.pixel_size)
+    return image

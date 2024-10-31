@@ -1,5 +1,32 @@
 import cv2
 import numpy as np
+from fastapi import Response, UploadFile
+
+
+async def process_image(file: UploadFile, effect_function, params):
+    image = np.fromstring(await file.read(), np.uint8)
+    image = cv2.imdecode(image, cv2.IMREAD_COLOR)
+
+    if image is None:
+        return ValueError("Invalid image format")
+
+    # resize first
+    image = resize_image(image, params.output_size)
+
+    processed_image = effect_function(image, params)
+
+    #  compress image
+    _, buffer = compress_image(
+        processed_image, params.output_format, params.output_quality
+    )
+
+    if not buffer.size:
+        return ValueError("Failed to encode image")
+
+    return Response(
+        content=buffer.tobytes(),
+        media_type=f"image/{params.output_format}",
+    )
 
 
 def resize_image(
@@ -29,9 +56,11 @@ def adjust_brightness(image: np.ndarray):
 
 def pixelate(image, pixel_size):
     h, w = image.shape[:2]
-    small = cv2.resize(
-        image, (w // pixel_size, h // pixel_size), interpolation=cv2.INTER_NEAREST
-    )
+
+    target_w = max(1, w // pixel_size)
+    target_h = max(1, h // pixel_size)
+
+    small = cv2.resize(image, (target_w, target_h), interpolation=cv2.INTER_NEAREST)
     return cv2.resize(small, (w, h), interpolation=cv2.INTER_NEAREST)
 
 
@@ -43,7 +72,8 @@ def add_scanlines(image, intensity=0.1):
     return cv2.addWeighted(image, 1, scanlines, intensity, 0)
 
 
-def compress_image(image, format="jpg", quality=95):
+def compress_image(image, format="jpg", quality=100):
+
     if format == "jpg":
         return cv2.imencode(f".{format}", image, [cv2.IMWRITE_JPEG_QUALITY, quality])
     elif format == "png":
