@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button'
 import useStore from '@/store'
+import { Button } from '../ui/button'
 
 const GenerateButton = () => {
   const originalImage = useStore((state) => state.originalImage)
@@ -9,11 +9,6 @@ const GenerateButton = () => {
   const isProcessing = useStore((state) => state.isProcessing)
 
   const handleGenerate = async () => {
-    // print values from the store
-    console.log('originalImage', originalImage)
-    console.log('selectedModel', selectedModel)
-    console.log('modelParameters', modelParameters)
-
     if (!originalImage || !selectedModel) return
 
     try {
@@ -25,7 +20,7 @@ const GenerateButton = () => {
 
   return (
     <Button
-      className="self-end rounded-2xl"
+      className="w-full self-end rounded-2xl"
       size="lg"
       onClick={handleGenerate}
       disabled={

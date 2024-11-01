@@ -39,7 +39,7 @@ const DitheringSelector = () => {
           <SelectTrigger>
             <SelectValue placeholder="Select a dithering type" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent id="dithering-type">
             <SelectItem value="floyd_steinberg">Floyd-Steinberg</SelectItem>
             <SelectItem value="bayer">Bayer</SelectItem>
           </SelectContent>
@@ -153,33 +153,6 @@ const DitheringSelector = () => {
           </Select>
         </div>
       )}
-      <div className="grid gap-3">
-        <div className="grid gap-2">
-          <Label htmlFor="pixelation-size">Pixelation Size</Label>
-          <p className="text-sm text-muted-foreground">
-            If you want to pixelate the image, set the pixel size to a value
-            greater than 0. It works best with the floyd-steinberg dithering.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-[1fr_auto] gap-2">
-          <Slider
-            id="pixelation-size"
-            min={0}
-            max={10}
-            defaultValue={[0]}
-            value={
-              modelParameters?.pixelSize ? [modelParameters.pixelSize] : [0]
-            }
-            onValueChange={(value) =>
-              setModelParameters({ pixelSize: value[0] })
-            }
-          />
-          <span className="text-sm text-muted-foreground border border-muted rounded-md px-2 py-1 w-10 text-right">
-            {modelParameters?.pixelSize || 0}
-          </span>
-        </div>
-      </div>
     </div>
   )
 }

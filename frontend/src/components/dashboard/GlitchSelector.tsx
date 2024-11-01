@@ -1,13 +1,6 @@
 import { GlitchParams } from '@/types'
 import { Label } from '../ui/label'
-import {
-  Select,
-  SelectItem,
-  SelectContent,
-  SelectTrigger,
-  SelectValue,
-} from '../ui/select'
-import { Slider } from '../ui/slider'
+
 import useStore from '@/store'
 import { Input } from '../ui/input'
 
@@ -27,74 +20,71 @@ const GlitchSelector = () => {
     <div className="grid gap-6 bg-card text-card-foreground rounded-xl p-3">
       <h3 className="text-xs font-medium">GLITCH</h3>
       <div className="grid gap-3">
-        <Label htmlFor="glitch-direction">Color Shift Direction</Label>
-        <Select
-          value={modelParameters?.shiftDirection || ''}
-          onValueChange={(value) =>
-            setModelParameters({
-              shiftDirection: value as 'horizontal' | 'vertical' | 'both',
-            })
-          }
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select a color shift direction" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="horizontal">Horizontal</SelectItem>
-            <SelectItem value="vertical">Vertical</SelectItem>
-            <SelectItem value="both">Both</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-      <div className="grid gap-3">
-        <div className="grid grid-cols-[1fr_auto] gap-2">
-          <Label htmlFor="glitch-shift-amount">Color Shift Amount</Label>
-          <span className="text-sm text-muted-foreground border border-muted rounded-md px-2 py-1 w-10 text-right">
-            {modelParameters?.shiftAmount || 15}
-          </span>
-        </div>
-        <Slider
-          id="glitch-shift-amount"
-          min={1}
-          max={20}
-          step={1}
-          defaultValue={[15]}
-          value={
-            modelParameters?.shiftAmount ? [modelParameters.shiftAmount] : [5]
-          }
-          onValueChange={(value) =>
-            setModelParameters({ shiftAmount: value[0] })
+        <Label htmlFor="glitch-intensity">Intensity</Label>
+        <Input
+          type="number"
+          min={0}
+          max={1}
+          step={0.1}
+          value={modelParameters?.intensity || 0.5}
+          onChange={(e) =>
+            setModelParameters({ intensity: Number(e.target.value) })
           }
         />
       </div>
       <div className="grid gap-3">
-        <Label htmlFor="glitch-noise-type">Noise Type</Label>
-        <Select
-          value={modelParameters?.noiseType || 'gaussian'}
-          onValueChange={(value) => {
-            setModelParameters({ noiseType: value })
-          }}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select a noise type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="gaussian">Gaussian</SelectItem>
-            <SelectItem value="salt_pepper">Salt & Pepper</SelectItem>
-            <SelectItem value="speckle">Speckle</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-      <div className="grid gap-3">
-        <Label htmlFor="glitch-noise-strength">Noise Strength</Label>
+        <Label htmlFor="glitch-tracking-error">Tracking Error</Label>
+        <span className="text-muted-foreground text-sm">
+          The strength of vertical displacement. (0.0 - 1.0)
+        </span>
         <Input
           type="number"
-          value={modelParameters?.noiseStrength || 0.1}
           min={0}
           max={1}
           step={0.1}
+          value={modelParameters?.trackingError || 0.5}
           onChange={(e) =>
-            setModelParameters({ noiseStrength: Number(e.target.value) })
+            setModelParameters({ trackingError: Number(e.target.value) })
+          }
+        />
+      </div>
+      <div className="grid gap-3">
+        <Label htmlFor="glitch-color-bleeding">Color Bleeding</Label>
+        <Input
+          id="glitch-color-bleeding"
+          type="number"
+          min={0}
+          max={1}
+          step={0.1}
+          value={modelParameters?.colorBleeding || 0.6}
+          onChange={(e) =>
+            setModelParameters({ colorBleeding: Number(e.target.value) })
+          }
+        />
+      </div>
+      <div className="grid gap-3">
+        <Label htmlFor="glitch-color-shift">Color Shift</Label>
+        <Input
+          type="number"
+          min={0}
+          max={1}
+          step={0.1}
+          value={modelParameters?.colorShift || 0.5}
+          onChange={(e) =>
+            setModelParameters({ colorShift: Number(e.target.value) })
+          }
+        />
+      </div>
+      <div className="grid gap-3">
+        <Label htmlFor="glitch-noise-amount">Noise Amount</Label>
+        <Input
+          type="number"
+          min={0}
+          max={1}
+          step={0.1}
+          value={modelParameters?.noiseAmount || 0.15}
+          onChange={(e) =>
+            setModelParameters({ noiseAmount: Number(e.target.value) })
           }
         />
       </div>

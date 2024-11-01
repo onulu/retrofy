@@ -13,8 +13,6 @@ const HalftoneSelector = () => {
 
   if (!selectedModel) return null
 
-  console.log('modelParameters', modelParameters)
-
   return (
     <div className="grid gap-3 bg-card text-card-foreground rounded-xl p-3">
       <h3 className="text-xs font-medium">DOT OPTIONS</h3>
@@ -22,6 +20,7 @@ const HalftoneSelector = () => {
         <Label htmlFor="halftone-background-color">Background Color</Label>
         <div className="flex justify-end">
           <Input
+            id="halftone-background-color"
             type="color"
             className="w-16 h-10"
             value={modelParameters?.bgColor || '#ffffff'}
@@ -33,6 +32,7 @@ const HalftoneSelector = () => {
         <Label htmlFor="halftone-foreground-color">Color</Label>
         <div className="flex justify-end">
           <Input
+            id="halftone-foreground-color"
             type="color"
             className="w-16 h-10"
             value={modelParameters?.color || '#000000'}
@@ -48,6 +48,7 @@ const HalftoneSelector = () => {
           </p>
         </Label>
         <Input
+          id="halftone-dot-size"
           type="number"
           value={modelParameters?.size || ''}
           placeholder="Please enter a value (1 - 50)"
@@ -65,6 +66,7 @@ const HalftoneSelector = () => {
           </p>
         </Label>
         <Input
+          id="halftone-dot-jump"
           type="number"
           value={modelParameters?.jump || ''}
           placeholder="Auto"
@@ -82,6 +84,7 @@ const HalftoneSelector = () => {
           </p>
         </Label>
         <Input
+          id="halftone-dot-ratio"
           type="number"
           value={modelParameters?.maxDotSizeRatio || 1.4}
           min={0.5}

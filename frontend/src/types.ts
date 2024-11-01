@@ -2,9 +2,8 @@ export enum ColorPalettes {
   ZX_SPECTRUM = 'zx_spectrum',
   COMMODORE64 = 'commodore64',
   APPLE2 = 'apple2',
-  NES = 'nes',
+  nintendo = 'nintendo',
   GAMEBOY = 'gameboy',
-  CGA = 'cga',
   EGA = 'ega',
   GRAYSCALE = 'grayscale',
   RGB = 'rgb',
@@ -13,11 +12,10 @@ export enum ColorPalettes {
 }
 
 export enum FilterModels {
-  DITHERING = 'dithering',
-  GLITCH = 'glitch',
   HALFTONE = 'halftone',
-  LIGHTLEAKS = 'lightleaks',
-  VIGNETTING = 'vignetting',
+  DITHERING = 'dithering',
+  PIXELATE = 'pixelate',
+  GLITCH = 'glitch',
 }
 
 export type DitheringParams = {
@@ -26,14 +24,19 @@ export type DitheringParams = {
   paletteName?: ColorPalettes
   grayscaleLevel?: number
   matrixSize?: number
+} & CommonParams
+
+export type PixelateParams = {
   pixelSize?: number
+  paletteName?: ColorPalettes
 } & CommonParams
 
 export type GlitchParams = {
-  shiftDirection: 'horizontal' | 'vertical' | 'both'
-  shiftAmount?: number
-  noiseType?: 'gaussian' | 'salt_pepper' | 'speckle'
-  noiseStrength?: number
+  intensity?: number
+  trackingError?: number
+  colorBleeding?: number
+  noiseAmount?: number
+  colorShift?: number
 } & CommonParams
 
 export type HalftoneParams = {
@@ -50,4 +53,4 @@ export type CommonParams = {
   outputQuality?: number
 }
 
-export type FilterParams = DitheringParams | GlitchParams
+export type FilterParams = DitheringParams | GlitchParams | PixelateParams

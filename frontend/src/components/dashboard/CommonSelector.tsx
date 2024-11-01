@@ -31,7 +31,7 @@ const CommonSelector = () => {
         />
       </div>
       <div className="grid gap-3">
-        <Label htmlFor="image-output-format">Image Format</Label>
+        <p className="text-sm">Image Format</p>
         <Select
           value={modelParameters?.outputFormat || 'jpeg'}
           onValueChange={(value) =>
