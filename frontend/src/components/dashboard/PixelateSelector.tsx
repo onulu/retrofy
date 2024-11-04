@@ -10,6 +10,8 @@ import {
 import { ColorPalettes, PixelateParams } from '@/types'
 import useStore from '@/store'
 import { PALETTES } from '@/utils'
+import { cn } from '@/lib/utils'
+import { Button } from '../ui/button'
 
 const PixelateSelector = () => {
   const selectedModel = useStore((state) => state.selectedModel)
@@ -24,49 +26,43 @@ const PixelateSelector = () => {
   return (
     <div className="grid gap-4 bg-card text-card-foreground rounded-xl p-3">
       <h3 className="text-xs font-medium">PIXELATE</h3>
-      <div className="grid gap-3">
-        <div className="grid gap-2">
-          <p className="text-sm">Pixelation size</p>
-          <p className="text-sm text-muted-foreground">
-            The larger the pixel size, the more pixelated the image will be.
-          </p>
-        </div>
-        <div className="grid grid-cols-[1fr_auto] gap-2">
-          <Slider
-            min={0}
-            max={60}
-            defaultValue={[0]}
-            value={
-              modelParameters?.pixelSize ? [modelParameters.pixelSize] : [0]
-            }
-            onValueChange={(value) =>
-              setModelParameters({ pixelSize: value[0] })
-            }
-          />
-          <span className="text-sm text-muted-foreground border border-muted rounded-md px-2 py-1 w-10 text-right">
+      <div className="grid grid-rows-2 items-center">
+        <div className="grid gap-2 grid-cols-[auto_auto] items-center justify-between">
+          <p className="text-sm">Size</p>
+          <span className="text-sm text-muted-foreground border border-transparent hover:border-muted rounded-md px-2 py-1 w-10 text-right">
             {modelParameters?.pixelSize || 1}
           </span>
         </div>
+        <Slider
+          title="Pixel Size"
+          min={0}
+          max={60}
+          defaultValue={[0]}
+          value={modelParameters?.pixelSize ? [modelParameters.pixelSize] : [0]}
+          onValueChange={(value) => setModelParameters({ pixelSize: value[0] })}
+          className="[&_[role=slider]]:h-4 [&_[role=slider]]:w-4"
+        />
       </div>
-      <div className="grid gap-3">
-        <p className="text-sm">Color Palette</p>
-        <p className="text-sm text-muted-foreground">
-          Select a color palette to apply to the image. Select 'none' to use the
-          original image colors.
-        </p>
+      <div className="grid gap-3 grid-rows-[auto_1fr] items-center">
+        <div className="flex items-center gap-2 justify-between">
+          <p className="text-sm">Color Palette</p>
+          <Button variant="primary" size="xs" onClick={() => {}}>
+            Auto
+          </Button>
+        </div>
         <Select
           value={modelParameters?.paletteName || ''}
           onValueChange={(value) => {
             setModelParameters({
-              paletteName: value === 'none' ? '' : value,
+              paletteName: value === 'Auto' ? '' : value,
             })
           }}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Select color palette" />
+            <SelectValue placeholder="Preset" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="none">none</SelectItem>
+            <SelectItem value="Auto">Auto</SelectItem>
             {Object.values(ColorPalettes).map((palette) => (
               <SelectItem key={palette} value={palette}>
                 {palette}
@@ -75,7 +71,7 @@ const PixelateSelector = () => {
           </SelectContent>
         </Select>
         {modelParameters?.paletteName && (
-          <div className="grid grid-cols-8 gap-4 p-4 border border-muted rounded-md bg-card/50">
+          <div className="col-span-full grid grid-cols-8 gap-4 p-4 border border-muted rounded-md bg-card/50">
             {PALETTES[modelParameters.paletteName as keyof typeof PALETTES].map(
               ({ color }, index) => (
                 <div

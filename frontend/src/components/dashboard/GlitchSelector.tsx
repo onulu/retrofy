@@ -19,7 +19,7 @@ const GlitchSelector = () => {
   return (
     <div className="grid gap-6 bg-card text-card-foreground rounded-xl p-3">
       <h3 className="text-xs font-medium">GLITCH</h3>
-      <div className="grid gap-3">
+      <div className="grid gap-3 grid-cols-[1fr_1fr] items-center">
         <Label htmlFor="glitch-intensity">Intensity</Label>
         <Input
           type="number"
@@ -32,11 +32,13 @@ const GlitchSelector = () => {
           }
         />
       </div>
-      <div className="grid gap-3">
-        <Label htmlFor="glitch-tracking-error">Tracking Error</Label>
-        <span className="text-muted-foreground text-sm">
-          The strength of vertical displacement. (0.0 - 1.0)
-        </span>
+      <div className="grid gap-3 grid-cols-[1fr_1fr] items-center">
+        <div>
+          <Label htmlFor="glitch-tracking-error">Tracking Error</Label>
+          <p className="text-muted-foreground text-sm">
+            The strength of vertical displacement
+          </p>
+        </div>
         <Input
           type="number"
           min={0}
@@ -48,7 +50,7 @@ const GlitchSelector = () => {
           }
         />
       </div>
-      <div className="grid gap-3">
+      <div className="grid gap-3 grid-cols-[1fr_1fr] items-center">
         <Label htmlFor="glitch-color-bleeding">Color Bleeding</Label>
         <Input
           id="glitch-color-bleeding"
@@ -62,9 +64,10 @@ const GlitchSelector = () => {
           }
         />
       </div>
-      <div className="grid gap-3">
+      <div className="grid gap-3 grid-cols-[1fr_1fr] items-center">
         <Label htmlFor="glitch-color-shift">Color Shift</Label>
         <Input
+          id="glitch-color-shift"
           type="number"
           min={0}
           max={1}
@@ -75,9 +78,10 @@ const GlitchSelector = () => {
           }
         />
       </div>
-      <div className="grid gap-3">
+      <div className="grid gap-3 grid-cols-[1fr_1fr] items-center">
         <Label htmlFor="glitch-noise-amount">Noise Amount</Label>
         <Input
+          id="glitch-noise-amount"
           type="number"
           min={0}
           max={1}

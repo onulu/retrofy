@@ -46,12 +46,7 @@ const ModelSelector = () => {
     <div className="grid gap-4  bg-card text-card-foreground rounded-xl p-3">
       <h3 className="text-xs font-medium">FILTER</h3>
       <div className="grid gap-3">
-        <Label htmlFor="model">
-          Model Filter
-          <p className="text-sm text-muted-foreground mt-2">
-            Select a filter model to apply to your image.
-          </p>
-        </Label>
+        <Label htmlFor="model">Model Filter</Label>
         <Select onValueChange={handleModelChange} value={selectedModel ?? ''}>
           <SelectTrigger
             id="model"
@@ -61,7 +56,7 @@ const ModelSelector = () => {
           </SelectTrigger>
           <SelectContent>
             {modelOptions.map((option) => (
-              <SelectItem value={option.value}>
+              <SelectItem value={option.value} key={option.value}>
                 <div className="flex items-start gap-3 text-muted-foreground">
                   <div className="grid gap-0.5">
                     <p className="font-medium text-foreground">

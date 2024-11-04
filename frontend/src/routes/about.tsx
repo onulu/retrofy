@@ -1,6 +1,6 @@
 export default function About() {
   return (
-    <main className="mx-4 rounded-3xl bg-muted p-4 h-[calc(100dvh-57px-1rem)]">
+    <main className="mx-4 rounded-3xl bg-muted p-4 h-full">
       <div className="items-center justify-center max-w-screen-sm mx-auto px-4 md:px-0 flex flex-col gap-8 h-full overflow-y-auto">
         <div className="space-y-2 relative">
           <h3 className="text-secondary-foreground">Retrofy</h3>
@@ -38,7 +38,7 @@ export default function About() {
               target="_blank"
               title="From Retrofy"
             >
-              your.email@example.com
+              hi@d-o.dev
             </a>{' '}
             or you can visit my website at{' '}
             <a

@@ -51,10 +51,9 @@ const ImagePreview = () => {
           onChange={handleImageChange}
         />
         <Button
-          variant="secondary"
+          variant="muted"
           aria-label="Upload image"
           size="lg"
-          className="rounded-2xl"
           onClick={() => {
             document.getElementById('upload-image')?.click()
           }}
@@ -68,45 +67,23 @@ const ImagePreview = () => {
 
   if (!enhancedImage) {
     return (
-      <div className="w-full max-h-[70dvh] flex items-center justify-center">
+      <div className="w-full h-[calc(100dvh-57px-1rem)] flex items-center justify-center">
         <img
           src={originalImage.url}
           alt="Original Image"
-          className="max-w-full max-h-full w-auto h-auto object-contain"
+          className="max-w-full max-h-full object-contain"
         />
       </div>
     )
   }
 
   return (
-    <div className="">
-      <div className="relative w-full h-full">
-        <img src={enhancedImage?.url} alt="Enhanced Image" className="w-full" />
-      </div>
-      {!isProcessing && (
-        <div className=" absolute bottom-6 right-6">
-          <div className="grid grid-rows-2 gap-2">
-            <Button
-              variant="secondary"
-              size="icon"
-              onClick={resetState}
-              aria-label="Reset image"
-              className="rounded-full w-12 h-12"
-            >
-              <Eraser />
-            </Button>
-            <Button
-              onClick={handleDownload}
-              size="icon"
-              variant="default"
-              aria-label="Download image"
-              className="rounded-full w-12 h-12"
-            >
-              <Download />
-            </Button>
-          </div>
-        </div>
-      )}
+    <div className="w-full h-[calc(100dvh-57px-1rem)] flex items-center justify-center">
+      <img
+        src={enhancedImage?.url}
+        alt="Enhanced Image"
+        className="max-w-full max-h-full object-contain"
+      />
     </div>
   )
 }

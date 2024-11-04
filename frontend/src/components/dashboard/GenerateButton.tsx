@@ -20,7 +20,7 @@ const GenerateButton = () => {
 
   return (
     <Button
-      className="w-full self-end rounded-2xl"
+      className="w-full self-end"
       size="lg"
       onClick={handleGenerate}
       disabled={
