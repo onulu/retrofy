@@ -14,14 +14,19 @@ class DitheringParameters(ImageProcessingBase):
     grayscale_level: Optional[int] = 4
     palette_name: Optional[str] = "rgb"
     matrix_size: Optional[int] = 2
+
+
+class PixelateParameters(ImageProcessingBase):
     pixel_size: Optional[int] = 1
+    palette_name: Optional[str] = None
 
 
 class GlitchParameters(ImageProcessingBase):
-    shift_amount: Optional[int] = 5
-    direction: Optional[str] = "horizontal"
-    noise_type: Optional[str] = "gaussian"
-    noise_strength: Optional[float] = 0.1
+    intensity: Optional[float] = 0.5
+    tracking_error: Optional[float] = 0.5
+    color_bleeding: Optional[float] = 0.6
+    noise_amount: Optional[float] = 0.15
+    color_shift: Optional[float] = 0.5
 
 
 class HalftoneParameters(ImageProcessingBase):
@@ -30,6 +35,11 @@ class HalftoneParameters(ImageProcessingBase):
     bg_color: Optional[str] = "#ffffff"
     color: Optional[str] = "#000000"
     max_dot_size_ratio: Optional[float] = 1.4
+
+
+class NoiseParameters(BaseModel):
+    noise_type: Optional[str] = "gaussian"
+    noise_strength: Optional[float] = 0.5
 
 
 class PasscodeCheck(BaseModel):

@@ -56,7 +56,7 @@ PALETTES = {
         ],
         dtype=np.uint8,
     ),
-    "nes": np.array(
+    "nintendo": np.array(
         [
             [124, 124, 124],  # Light Grey
             [0, 0, 252],  # Blue
@@ -83,15 +83,6 @@ PALETTES = {
             [139, 172, 15],  # Light Green
             [48, 98, 48],  # Dark Green
             [15, 56, 15],  # Darkest Green
-        ],
-        dtype=np.uint8,
-    ),
-    "cga": np.array(
-        [
-            [0, 0, 0],  # Black
-            [0, 255, 255],  # Cyan
-            [255, 0, 255],  # Magenta
-            [255, 255, 255],  # White
         ],
         dtype=np.uint8,
     ),

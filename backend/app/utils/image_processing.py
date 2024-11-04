@@ -54,19 +54,10 @@ def adjust_brightness(image: np.ndarray):
         return cv2.equalizeHist(image)
 
 
-def pixelate(image, pixel_size):
-    h, w = image.shape[:2]
-
-    target_w = max(1, w // pixel_size)
-    target_h = max(1, h // pixel_size)
-
-    small = cv2.resize(image, (target_w, target_h), interpolation=cv2.INTER_NEAREST)
-    return cv2.resize(small, (w, h), interpolation=cv2.INTER_NEAREST)
-
-
 def add_scanlines(image, intensity=0.1):
     h, w = image.shape[:2]
 
+    # black이미지를 만들고 시작
     scanlines = np.zeros((h, w, 3), dtype=np.uint8)
     scanlines[::2] = [0, 0, 0]
     return cv2.addWeighted(image, 1, scanlines, intensity, 0)
