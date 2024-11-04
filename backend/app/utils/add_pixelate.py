@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 from .palette_presets import PALETTES
-from .add_dithering import find_nearest_colors_vectorized
+from .add_dithering import find_nearest_colors_vectorized, get_dominant_colors
 
 
 def add_pixelate(image, pixel_size, palette_name=None):
@@ -17,12 +17,13 @@ def add_pixelate(image, pixel_size, palette_name=None):
 
     if palette_name and palette_name in PALETTES:
         palette = PALETTES[palette_name]
-        small = small.reshape(-1, small.shape[-1])
-        small = find_nearest_colors_vectorized(palette, small)
 
-        # Fix: Assign the reshaped array back to small
-        small = small.reshape(target_h, target_w, -1).astype(np.uint8)
+    else:
+        palette = get_dominant_colors(small, n_colors=8)
 
+    small = small.reshape(-1, small.shape[-1])
+    small = find_nearest_colors_vectorized(palette, small)
+    small = small.reshape(target_h, target_w, -1).astype(np.uint8)
     # Resize back to original dimensions for consistent output size
     result = cv2.resize(small, (w, h), interpolation=cv2.INTER_NEAREST)
 
