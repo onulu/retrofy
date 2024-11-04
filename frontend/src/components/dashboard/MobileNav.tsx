@@ -1,4 +1,5 @@
-import { Download, Settings2, Undo2, Upload } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Download, Settings2, Undo2 } from 'lucide-react'
 import { Button } from '../ui/button'
 import {
   Drawer,
@@ -17,11 +18,21 @@ import ModelSelector from './ModelSelector'
 import ParameterSelector from './ParameterSelector'
 
 import useStore from '@/store'
+import { useMediaQuery } from '@/utils/useMediaQuery'
 
 const MobileNav = () => {
   const enhancedImage = useStore((state) => state.enhancedImage)
   const originalImage = useStore((state) => state.originalImage)
   const resetState = useStore((state) => state.resetState)
+
+  const [open, setOpen] = useState(false)
+  const isDesktop = useMediaQuery('(min-width: 768px)')
+
+  useEffect(() => {
+    if (isDesktop) {
+      setOpen(false)
+    }
+  }, [isDesktop])
 
   return (
     originalImage && (
@@ -34,7 +45,7 @@ const MobileNav = () => {
       rounded-full 
       shadow-lg"
       >
-        <Drawer>
+        <Drawer open={open} onOpenChange={setOpen}>
           <DrawerTrigger asChild>
             <Button
               variant="muted"
