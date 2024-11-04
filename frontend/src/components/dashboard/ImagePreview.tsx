@@ -1,12 +1,4 @@
-import {
-  Download,
-  Eraser,
-  Redo,
-  Redo2,
-  RedoDot,
-  StepBack,
-  Upload,
-} from 'lucide-react'
+import { Upload } from 'lucide-react'
 
 import { Button } from '../ui/button'
 import useStore from '@/store'
@@ -16,27 +8,12 @@ const ImagePreview = () => {
   const setOriginalImage = useStore((state) => state.setOriginalImage)
   const setEnhancedImage = useStore((state) => state.setEnhancedImage)
   const enhancedImage = useStore((state) => state.enhancedImage)
-  const isProcessing = useStore((state) => state.isProcessing)
-  const resetState = useStore((state) => state.resetState)
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
       setOriginalImage(file)
       setEnhancedImage(null)
     }
-  }
-
-  const handleDownload = () => {
-    if (!enhancedImage || !originalImage) return
-
-    const a = document.createElement('a')
-    a.href = enhancedImage?.url || ''
-
-    // Get original extension or default to png
-    const originalExt = originalImage.file.name.split('.').pop() || 'jpg'
-    a.download = `enhanced-image.${originalExt}`
-
-    a.click()
   }
 
   if (!originalImage) {

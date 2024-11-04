@@ -1,5 +1,4 @@
 import { Slider } from '@/components/ui/slider'
-import { Label } from '@/components/ui/label'
 import {
   Select,
   SelectContent,
@@ -10,7 +9,6 @@ import {
 import { ColorPalettes, PixelateParams } from '@/types'
 import useStore from '@/store'
 import { PALETTES } from '@/utils'
-import { cn } from '@/lib/utils'
 import { Button } from '../ui/button'
 
 const PixelateSelector = () => {
