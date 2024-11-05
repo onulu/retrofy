@@ -28,9 +28,9 @@ const ImageUploader = () => {
       {originalImage && (
         <div className="grid gap-2">
           <div className="grid grid-cols-[1fr_auto] gap-4 w-full items-center">
-            <p className="text-sm text-muted-foreground">
+            <span className="text-sm text-muted-foreground truncate block">
               {originalImage.file.name}
-            </p>
+            </span>
             <Button
               variant="outline"
               size="sm"

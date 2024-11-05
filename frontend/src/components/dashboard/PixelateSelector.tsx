@@ -10,8 +10,11 @@ import { ColorPalettes, PixelateParams } from '@/types'
 import useStore from '@/store'
 import { PALETTES } from '@/utils'
 import { Button } from '../ui/button'
+import { useState } from 'react'
 
 const PixelateSelector = () => {
+  const [autoPalette, setAutoPalette] = useState(false)
+
   const selectedModel = useStore((state) => state.selectedModel)
   const modelParameters = useStore(
     (state) => state.modelParameters
@@ -44,12 +47,22 @@ const PixelateSelector = () => {
       <div className="grid gap-3 grid-rows-[auto_1fr] items-center">
         <div className="flex items-center gap-2 justify-between">
           <p className="text-sm">Color Palette</p>
-          <Button variant="primary" size="xs" onClick={() => {}}>
+          <Button
+            variant={autoPalette ? 'primary' : 'disabled'}
+            size="xs"
+            onClick={() => {
+              setAutoPalette(!autoPalette)
+              setModelParameters({
+                paletteName: '',
+              })
+            }}
+          >
             Auto
           </Button>
         </div>
         <Select
-          value={modelParameters?.paletteName || ''}
+          value={autoPalette ? 'Auto' : modelParameters?.paletteName || ''}
+          disabled={autoPalette}
           onValueChange={(value) => {
             setModelParameters({
               paletteName: value === 'Auto' ? '' : value,
@@ -68,7 +81,7 @@ const PixelateSelector = () => {
             ))}
           </SelectContent>
         </Select>
-        {modelParameters?.paletteName && (
+        {modelParameters?.paletteName && !autoPalette && (
           <div className="col-span-full grid grid-cols-8 gap-4 p-4 border border-muted rounded-md bg-card/50">
             {PALETTES[modelParameters.paletteName as keyof typeof PALETTES].map(
               ({ color }, index) => (
