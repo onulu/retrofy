@@ -18,7 +18,7 @@ const modelOptions = [
   },
   {
     label: 'Halftone',
-    value: FilterModels.HALFTONE,
+    value: FilterModels.HALFTONE_V2,
     description: 'Recreates images with dots of varying sizes',
   },
   {

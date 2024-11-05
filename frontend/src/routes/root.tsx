@@ -3,6 +3,7 @@ import { Link, Outlet } from 'react-router-dom'
 import { ThemeProvider } from '@/components/theme-provider'
 import Logo from '@/components/Logo'
 import { Button } from '@/components/ui/button'
+import { Toaster } from '@/components/ui/toaster'
 
 export default function Root() {
   return (
@@ -25,6 +26,7 @@ export default function Root() {
           <Outlet />
         </div>
       </div>
+      <Toaster />
     </ThemeProvider>
   )
 }

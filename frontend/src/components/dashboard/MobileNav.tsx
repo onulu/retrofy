@@ -24,14 +24,16 @@ const MobileNav = () => {
   const enhancedImage = useStore((state) => state.enhancedImage)
   const originalImage = useStore((state) => state.originalImage)
   const resetState = useStore((state) => state.resetState)
+  const setIsDrawerOpen = useStore((state) => state.setIsDrawerOpen)
+  const isDrawerOpen = useStore((state) => state.isDrawerOpen)
 
-  const [open, setOpen] = useState(false)
   const isDesktop = useMediaQuery('(min-width: 768px)')
 
   useEffect(() => {
     if (isDesktop) {
-      setOpen(false)
+      setIsDrawerOpen(false)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDesktop])
 
   return (
@@ -45,7 +47,7 @@ const MobileNav = () => {
       rounded-full 
       shadow-lg"
       >
-        <Drawer open={open} onOpenChange={setOpen}>
+        <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
           <DrawerTrigger asChild>
             <Button
               variant="muted"

@@ -15,6 +15,7 @@ const ParameterSelector = () => {
       {selectedModel === 'dithering' && <DitheringSelector />}
       {selectedModel === 'glitch' && <GlitchSelector />}
       {selectedModel === 'halftone' && <HalftoneSelector />}
+      {selectedModel === 'halftone-v2' && <HalftoneSelector />}
       {selectedModel === 'pixelate' && <PixelateSelector />}
     </div>
   )

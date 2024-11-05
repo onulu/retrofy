@@ -13,9 +13,18 @@ export enum ColorPalettes {
 
 export enum FilterModels {
   HALFTONE = 'halftone',
+  HALFTONE_V2 = 'halftone-v2',
   DITHERING = 'dithering',
   PIXELATE = 'pixelate',
   GLITCH = 'glitch',
+}
+
+export type ModelParams = {
+  halftone: HalftoneParams
+  halftoneV2: HalftoneV2Params
+  dithering: DitheringParams
+  pixelate: PixelateParams
+  glitch: GlitchParams
 }
 
 export type DitheringParams = {
@@ -47,10 +56,24 @@ export type HalftoneParams = {
   maxDotSizeRatio?: number
 } & CommonParams
 
+export type HalftoneV2Params = {
+  dotSize?: number
+  dotSpacing?: number
+  minRadius?: number
+  maxRadius?: number
+  background?: string
+  foreground?: string
+} & CommonParams
+
 export type CommonParams = {
-  outputSize: number
-  outputFormat: 'png' | 'jpeg' | 'webp'
+  outputSize?: number
+  outputFormat?: 'png' | 'jpeg' | 'webp'
   outputQuality?: number
 }
 
-export type FilterParams = DitheringParams | GlitchParams | PixelateParams
+export type FilterParams =
+  | DitheringParams
+  | GlitchParams
+  | PixelateParams
+  | HalftoneParams
+  | HalftoneV2Params

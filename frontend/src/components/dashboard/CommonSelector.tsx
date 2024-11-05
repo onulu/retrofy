@@ -12,10 +12,10 @@ import {
 import { useState } from 'react'
 
 const CommonSelector = () => {
+  const [autoSize, setAutoSize] = useState(true)
   const setModelParameters = useStore((state) => state.setModelParameters)
   const modelParameters = useStore((state) => state.modelParameters)
 
-  const [autoSize, setAutoSize] = useState(true)
   return (
     <div className="grid gap-4 self-start bg-card text-card-foreground rounded-xl p-3">
       <h3 className="text-xs font-medium">IMAGE OUTPUT</h3>

@@ -9,6 +9,7 @@ interface Store {
   modelParameters: FilterParams | null
   isProcessing: boolean
   appError: string | null
+  isDrawerOpen: boolean
   applyFilter: () => Promise<void>
   setOriginalImage: (image: File) => void
   setEnhancedImage: (image: Blob | null) => void
@@ -18,6 +19,7 @@ interface Store {
   setAppError: (error: string) => void
   resetState: () => void
   resetModelParameters: () => void
+  setIsDrawerOpen: (isOpen: boolean) => void
 }
 
 const useStore = create<Store>((set, get) => ({
@@ -29,7 +31,7 @@ const useStore = create<Store>((set, get) => ({
   commonParameters: null,
   isProcessing: false,
   appError: null,
-
+  isDrawerOpen: false,
   // 상태값 설정 함수
   setOriginalImage: (image) => {
     const { originalImage } = get()
@@ -116,6 +118,7 @@ const useStore = create<Store>((set, get) => ({
       })
     }
   },
+  setIsDrawerOpen: (isOpen) => set({ isDrawerOpen: isOpen }),
 }))
 
 export default useStore
