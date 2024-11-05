@@ -1,7 +1,7 @@
 # Retrofy
 
 OpenCV-based image filter tool that transforms photos into retro-style images.
-OpenCV 기반으로 이미지에 다양한 레트로 느낌의 필터를 적용할 수 있는 웹.
+OpenCV 기반으로 이미지에 다양한 레트로 느낌의 필터를 적용할 수 있는 웹앱.
 
 ## 기능
 
