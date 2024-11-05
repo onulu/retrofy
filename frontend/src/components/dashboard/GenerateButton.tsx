@@ -1,13 +1,6 @@
 import useStore from '@/store'
 import { Button } from '../ui/button'
-import {
-  DitheringParams,
-  FilterModels,
-  GlitchParams,
-  HalftoneParams,
-  PixelateParams,
-  HalftoneV2Params,
-} from '@/types'
+import { FilterModels } from '@/types'
 
 import { useToast } from '@/hooks/use-toast'
 
@@ -42,44 +35,25 @@ const GenerateButton = () => {
   const handleGenerate = async () => {
     if (!originalImage || !selectedModel) return
 
-    const parameterTypeMap = {
-      [FilterModels.DITHERING]: (params: unknown): params is DitheringParams =>
-        params !== null &&
-        typeof params === 'object' &&
-        'type' in params &&
-        'colorMode' in params,
-      [FilterModels.HALFTONE]: (params: unknown): params is HalftoneParams =>
-        params !== null && typeof params === 'object',
-      [FilterModels.HALFTONE_V2]: (
-        params: unknown
-      ): params is HalftoneV2Params =>
-        params !== null && typeof params === 'object',
-      [FilterModels.PIXELATE]: (params: unknown): params is PixelateParams =>
-        params !== null && typeof params === 'object',
-      [FilterModels.GLITCH]: (params: unknown): params is GlitchParams =>
-        params !== null && typeof params === 'object',
-    } as const
-
-    const typeGuard = parameterTypeMap[selectedModel]
-
-    if (!typeGuard || !typeGuard(modelParameters)) {
-      handleError({
-        title: 'Invalid parameters detected.',
-        message:
-          'Invalid parameters detected. Please check your parameters and try again.',
-      })
-      return
+    if (selectedModel === FilterModels.DITHERING) {
+      if (!modelParameters) {
+        handleError({
+          title: 'Invalid parameters detected.',
+          message:
+            'Invalid parameters detected. Please check your parameters and try again.',
+        })
+        return
+      }
     }
 
     try {
+      setIsDrawerOpen(false)
       await applyFilter()
     } catch (error) {
       handleError({
         message: 'Error generating image.',
         error,
       })
-    } finally {
-      setIsDrawerOpen(false)
     }
   }
 
