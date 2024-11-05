@@ -1,8 +1,6 @@
 import numpy as np
 import cv2
 
-from .add_noise import add_noise
-
 import numpy as np
 import cv2
 from typing import Tuple

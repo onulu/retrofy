@@ -120,7 +120,7 @@ def rgb_bayer_dithering(image: np.ndarray, palette_name: str, matrix_size: int):
     if palette_name and palette_name in PALETTES:
         palette = np.array(PALETTES[palette_name], dtype=np.float32)
     else:
-        raise ValueError("Invalid palette name")
+        palette = get_dominant_colors(image, n_colors=8)
 
     tiled_bayer = np.tile(
         bayer_matrix, (int(np.ceil(h / matrix_size)), int(np.ceil(w / matrix_size)))
