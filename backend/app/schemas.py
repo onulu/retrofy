@@ -29,12 +29,21 @@ class GlitchParameters(ImageProcessingBase):
     color_shift: Optional[float] = 0.5
 
 
+# class HalftoneParameters(ImageProcessingBase):
+#     size: Optional[int] = 10
+#     jump: Optional[int] = None
+#     bg_color: Optional[str] = "#ffffff"
+#     color: Optional[str] = "#000000"
+#     max_dot_size_ratio: Optional[float] = 1.4
+
+
 class HalftoneParameters(ImageProcessingBase):
-    size: Optional[int] = 10
-    jump: Optional[int] = None
-    bg_color: Optional[str] = "#ffffff"
-    color: Optional[str] = "#000000"
-    max_dot_size_ratio: Optional[float] = 1.4
+    dot_size: int = 20
+    dot_spacing: Optional[int] = None
+    min_radius: Optional[int] = 1
+    max_radius: Optional[int] = 10
+    background: Optional[str] = "#ffffff"
+    foreground: Optional[str] = "#000000"
 
 
 class NoiseParameters(BaseModel):

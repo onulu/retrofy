@@ -11,7 +11,7 @@ from .utils.add_dithering import apply_dithering_effect
 from .utils.add_glitch import apply_glitch_effect
 from .utils.add_pixelate import apply_pixelate
 from .utils.image_processing import process_image
-from .utils.add_halftone import apply_halftone_effect
+from .utils.add_halftone import apply_halftone_effect, apply_halftone_v2
 
 from .schemas import (
     DitheringParameters,
@@ -76,6 +76,16 @@ async def halftone_image(
 ):
     try:
         return await process_image(file, apply_halftone_effect, params)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.post("/halftone-v2")
+async def halftone_v2_image(
+    file: UploadFile = File(...), params: HalftoneParameters = Depends()
+):
+    try:
+        return await process_image(file, apply_halftone_v2, params)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
