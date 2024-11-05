@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-
+import { Analytics } from '@vercel/analytics/react'
 import Root from './routes/root'
 import ErrorPage from './error-page'
 import Index from './routes'
@@ -32,7 +32,12 @@ function App() {
     resetStore()
   }, [resetStore])
 
-  return <RouterProvider router={router} />
+  return (
+    <>
+      <RouterProvider router={router} />
+      <Analytics />
+    </>
+  )
 }
 
 export default App
