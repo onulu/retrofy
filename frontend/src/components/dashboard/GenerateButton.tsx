@@ -1,13 +1,6 @@
 import useStore from '@/store'
 import { Button } from '../ui/button'
-import {
-  DitheringParams,
-  FilterModels,
-  GlitchParams,
-  HalftoneParams,
-  PixelateParams,
-  HalftoneV2Params,
-} from '@/types'
+import { FilterModels } from '@/types'
 
 import { useToast } from '@/hooks/use-toast'
 
