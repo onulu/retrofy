@@ -1,4 +1,4 @@
-import { Upload } from 'lucide-react'
+import { Loader2, Upload } from 'lucide-react'
 
 import { Button } from '../ui/button'
 import useStore from '@/store'
@@ -8,6 +8,7 @@ const ImagePreview = () => {
   const setOriginalImage = useStore((state) => state.setOriginalImage)
   const setEnhancedImage = useStore((state) => state.setEnhancedImage)
   const enhancedImage = useStore((state) => state.enhancedImage)
+  const isProcessing = useStore((state) => state.isProcessing)
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
@@ -54,7 +55,11 @@ const ImagePreview = () => {
     )
   }
 
-  return (
+  return isProcessing ? (
+    <div className="w-full h-[calc(100dvh-57px-1rem)] flex items-center justify-center">
+      <Loader2 className="animate-spin" />
+    </div>
+  ) : (
     <div className="w-full h-[calc(100dvh-57px-1rem)] flex items-center justify-center">
       <img
         src={enhancedImage?.url}

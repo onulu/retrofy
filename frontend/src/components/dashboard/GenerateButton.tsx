@@ -17,37 +17,56 @@ const GenerateButton = () => {
   const modelParameters = useStore((state) => state.modelParameters)
   const applyFilter = useStore((state) => state.applyFilter)
   const isProcessing = useStore((state) => state.isProcessing)
-
   const setIsDrawerOpen = useStore((state) => state.setIsDrawerOpen)
-
   const setAppError = useStore((state) => state.setAppError)
 
   const { toast } = useToast()
+
+  const handleError = ({
+    title,
+    message,
+    error,
+  }: {
+    title?: string
+    message: string
+    error?: unknown
+  }) => {
+    setAppError(error ? `${message}: ${error}` : message)
+    toast({
+      variant: 'destructive',
+      title: title ?? 'Oh no! Something went wrong.',
+      description: message,
+    })
+  }
 
   const handleGenerate = async () => {
     if (!originalImage || !selectedModel) return
 
     const parameterTypeMap = {
       [FilterModels.DITHERING]: (params: unknown): params is DitheringParams =>
-        true,
+        params !== null &&
+        typeof params === 'object' &&
+        'type' in params &&
+        'colorMode' in params,
       [FilterModels.HALFTONE]: (params: unknown): params is HalftoneParams =>
-        true,
+        params !== null && typeof params === 'object',
       [FilterModels.HALFTONE_V2]: (
         params: unknown
-      ): params is HalftoneV2Params => true,
+      ): params is HalftoneV2Params =>
+        params !== null && typeof params === 'object',
       [FilterModels.PIXELATE]: (params: unknown): params is PixelateParams =>
-        true,
-      [FilterModels.GLITCH]: (params: unknown): params is GlitchParams => true,
+        params !== null && typeof params === 'object',
+      [FilterModels.GLITCH]: (params: unknown): params is GlitchParams =>
+        params !== null && typeof params === 'object',
     } as const
 
     const typeGuard = parameterTypeMap[selectedModel]
 
     if (!typeGuard || !typeGuard(modelParameters)) {
-      setAppError('Invalid parameters detected')
-      toast({
-        variant: 'destructive',
+      handleError({
         title: 'Invalid parameters detected.',
-        description: 'Please check your parameters and try again.',
+        message:
+          'Invalid parameters detected. Please check your parameters and try again.',
       })
       return
     }
@@ -55,19 +74,14 @@ const GenerateButton = () => {
     try {
       await applyFilter()
     } catch (error) {
-      setAppError(`Error generating image: ${error}`)
-      toast({
-        variant: 'destructive',
-        title: 'Oh no! Something went wrong.',
-        description: 'Error generating image.',
+      handleError({
+        message: 'Error generating image.',
+        error,
       })
     } finally {
       setIsDrawerOpen(false)
     }
   }
-
-  console.log('ModelParams', modelParameters)
-  console.log('SelectedModel', selectedModel)
 
   return (
     <div className="space-y-4">

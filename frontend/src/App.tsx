@@ -7,7 +7,6 @@ import ErrorPage from './error-page'
 import Index from './routes'
 import About from './routes/about'
 import useStore from './store'
-import ProtectedRoute from './components/ProtectedRoute'
 
 const router = createBrowserRouter([
   {
