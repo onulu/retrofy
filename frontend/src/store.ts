@@ -9,6 +9,7 @@ interface Store {
   modelParameters: FilterParams | null
   isProcessing: boolean
   appError: string | null
+  isDrawerOpen: boolean
   applyFilter: () => Promise<void>
   setOriginalImage: (image: File) => void
   setEnhancedImage: (image: Blob | null) => void
@@ -18,6 +19,7 @@ interface Store {
   setAppError: (error: string) => void
   resetState: () => void
   resetModelParameters: () => void
+  setIsDrawerOpen: (isOpen: boolean) => void
 }
 
 const useStore = create<Store>((set, get) => ({
@@ -29,7 +31,7 @@ const useStore = create<Store>((set, get) => ({
   commonParameters: null,
   isProcessing: false,
   appError: null,
-
+  isDrawerOpen: false,
   // 상태값 설정 함수
   setOriginalImage: (image) => {
     const { originalImage } = get()
@@ -52,9 +54,11 @@ const useStore = create<Store>((set, get) => ({
     }
   },
   setSelectedModel: (model) => {
+    console.log('setSelectedModel', model)
     set({ selectedModel: model })
   },
   setModelParameters: (parameters) => {
+    console.log('setModelParameters', parameters)
     set((state) => ({
       modelParameters: {
         ...state.modelParameters,
@@ -88,7 +92,7 @@ const useStore = create<Store>((set, get) => ({
     const { selectedModel, modelParameters, originalImage } =
       useStore.getState()
     if (!originalImage?.file || !selectedModel || !modelParameters) {
-      set({ appError: '원본이미지와 필터모델을 먼저 선택해주세요.' })
+      set({ appError: 'Please select the original image and filter model.' })
       return
     }
 
@@ -109,13 +113,12 @@ const useStore = create<Store>((set, get) => ({
     } catch (error) {
       set({
         appError:
-          error instanceof Error
-            ? error.message
-            : '알수없는 에러가 발생했습니다.',
+          error instanceof Error ? error.message : 'An unknown error occurred.',
         isProcessing: false,
       })
     }
   },
+  setIsDrawerOpen: (isOpen) => set({ isDrawerOpen: isOpen }),
 }))
 
 export default useStore

@@ -1,13 +1,11 @@
 import { useEffect } from 'react'
-import { inject } from '@vercel/analytics'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-
+import { Analytics } from '@vercel/analytics/react'
 import Root from './routes/root'
 import ErrorPage from './error-page'
 import Index from './routes'
 import About from './routes/about'
 import useStore from './store'
-import ProtectedRoute from './components/ProtectedRoute'
 
 const router = createBrowserRouter([
   {
@@ -17,11 +15,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: (
-          <ProtectedRoute>
-            <Index />
-          </ProtectedRoute>
-        ),
+        element: <Index />,
       },
       {
         path: '/about',
@@ -31,7 +25,6 @@ const router = createBrowserRouter([
   },
 ])
 
-inject()
 function App() {
   const resetStore = useStore((state) => state.resetState)
 
@@ -39,7 +32,12 @@ function App() {
     resetStore()
   }, [resetStore])
 
-  return <RouterProvider router={router} />
+  return (
+    <>
+      <RouterProvider router={router} />
+      <Analytics />
+    </>
+  )
 }
 
 export default App

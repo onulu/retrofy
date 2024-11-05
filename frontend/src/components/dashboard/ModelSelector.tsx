@@ -10,6 +10,29 @@ import {
 import { FilterModels } from '@/types'
 import useStore from '@/store'
 
+const modelOptions = [
+  {
+    label: 'Dithering',
+    value: FilterModels.DITHERING,
+    description: 'Blends colors with pixel patterns',
+  },
+  {
+    label: 'Halftone',
+    value: FilterModels.HALFTONE_V2,
+    description: 'Recreates images with dots of varying sizes',
+  },
+  {
+    label: 'Pixelate',
+    value: FilterModels.PIXELATE,
+    description: 'Creates blocky, low-res look',
+  },
+  {
+    label: 'VHS Glitch',
+    value: FilterModels.GLITCH,
+    description: 'Mimics analog tape distortion',
+  },
+]
+
 const ModelSelector = () => {
   const setSelectedModel = useStore((state) => state.setSelectedModel)
   const selectedModel = useStore((state) => state.selectedModel)
@@ -23,12 +46,7 @@ const ModelSelector = () => {
     <div className="grid gap-4  bg-card text-card-foreground rounded-xl p-3">
       <h3 className="text-xs font-medium">FILTER</h3>
       <div className="grid gap-3">
-        <Label htmlFor="model">
-          Model Filter
-          <p className="text-sm text-muted-foreground mt-2">
-            Select a filter model to apply to your image.
-          </p>
-        </Label>
+        <Label htmlFor="model">Model Filter</Label>
         <Select onValueChange={handleModelChange} value={selectedModel ?? ''}>
           <SelectTrigger
             id="model"
@@ -37,47 +55,20 @@ const ModelSelector = () => {
             <SelectValue placeholder="Select a model" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value={FilterModels.DITHERING}>
-              <div className="flex items-start gap-3 text-muted-foreground">
-                <div className="grid gap-0.5">
-                  <p className="font-medium text-foreground">Dithering</p>
-                  <p className="text-xs" data-description>
-                    If you want to make your image look like it's from the
-                    1980s.
-                  </p>
+            {modelOptions.map((option) => (
+              <SelectItem value={option.value} key={option.value}>
+                <div className="flex items-start gap-3 text-muted-foreground">
+                  <div className="grid gap-0.5">
+                    <p className="font-medium text-foreground">
+                      {option.label}
+                    </p>
+                    <p className="text-xs" data-description>
+                      {option.description}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </SelectItem>
-            <SelectItem value={FilterModels.GLITCH}>
-              <div className="flex items-start gap-3 text-muted-foreground">
-                <div className="grid gap-0.5">
-                  <p className="font-medium text-foreground">VHS Glitch</p>
-                  <p className="text-xs" data-description>
-                    If you want the vhs tape effect.
-                  </p>
-                </div>
-              </div>
-            </SelectItem>
-            <SelectItem value={FilterModels.HALFTONE}>
-              <div className="flex items-start gap-3 text-muted-foreground">
-                <div className="grid gap-0.5">
-                  <p className="font-medium text-foreground">Halftone</p>
-                  <p className="text-xs" data-description>
-                    If you want the halftone effect.
-                  </p>
-                </div>
-              </div>
-            </SelectItem>
-            <SelectItem value={FilterModels.VIGNETTING}>
-              <div className="flex items-start gap-3 text-muted-foreground">
-                <div className="grid gap-0.5">
-                  <p className="font-medium text-foreground">Vignetting</p>
-                  <p className="text-xs" data-description>
-                    If you want the vignetting effect.
-                  </p>
-                </div>
-              </div>
-            </SelectItem>
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>

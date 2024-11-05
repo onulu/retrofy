@@ -5,7 +5,7 @@ interface ImagePreviewProps {
   isMobile: boolean
 }
 
-const ImagePreview = ({ src, alt, onClose, isMobile }: ImagePreviewProps) => {
+const HoverImage = ({ src, alt, onClose, isMobile }: ImagePreviewProps) => {
   return (
     <div className="absolute w-40 h-20 z-10 bg-white rounded-lg left-1/2 transform -translate-x-1/2 translate-y-2 -mt-2 shadow-lg">
       <img
@@ -42,4 +42,4 @@ const ImagePreview = ({ src, alt, onClose, isMobile }: ImagePreviewProps) => {
   )
 }
 
-export default ImagePreview
+export default HoverImage

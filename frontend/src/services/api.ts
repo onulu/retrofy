@@ -53,6 +53,10 @@ export async function applyFilterLogic(
       return uploadImageForGlitch(file, params)
     case 'halftone':
       return uploadImageForHalftone(file, params)
+    case 'halftone-v2':
+      return uploadImageForHalftoneV2(file, params)
+    case 'pixelate':
+      return uploadImageForPixelate(file, params)
     default:
       console.log('here')
       return file
@@ -79,6 +83,20 @@ export async function uploadImageForHalftone(
   params: Record<string, number | string>
 ): Promise<Blob> {
   return uploadImage('halftone', file, params)
+}
+
+export async function uploadImageForHalftoneV2(
+  file: File,
+  params: Record<string, number | string>
+): Promise<Blob> {
+  return uploadImage('halftone-v2', file, params)
+}
+
+export async function uploadImageForPixelate(
+  file: File,
+  params: Record<string, number | string>
+): Promise<Blob> {
+  return uploadImage('pixelate', file, params)
 }
 
 export async function getNoisyImage(

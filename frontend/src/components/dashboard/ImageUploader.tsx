@@ -10,10 +10,10 @@ const ImageUploader = () => {
   const setEnhancedImage = useStore((state) => state.setEnhancedImage)
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    const maxSizeInBytes = 3 * 1024 * 1024 // 3MB
+    const maxSizeInBytes = 2 * 1024 * 1024 // 2MB
 
     if (file && file.size > maxSizeInBytes) {
-      console.log('File size exceeds the limit of 3MB.')
+      console.log('File size exceeds the limit of 2MB.')
       e.target.value = ''
     }
     if (file) {
@@ -28,9 +28,9 @@ const ImageUploader = () => {
       {originalImage && (
         <div className="grid gap-2">
           <div className="grid grid-cols-[1fr_auto] gap-4 w-full items-center">
-            <p className="text-sm text-muted-foreground">
+            <span className="text-sm text-muted-foreground truncate block">
               {originalImage.file.name}
-            </p>
+            </span>
             <Button
               variant="outline"
               size="sm"
@@ -49,7 +49,7 @@ const ImageUploader = () => {
         <Label htmlFor="image-input" className="font-normal">
           Select a File
           <p className="text-sm text-muted-foreground mt-2">
-            Image Size limit: 3MB
+            Image Size limit: 2MB
           </p>
         </Label>
         <Input

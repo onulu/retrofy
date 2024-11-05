@@ -45,7 +45,7 @@ export const PALETTES = {
     { color: 'rgb(141, 217, 191)' },
     { color: 'rgb(255, 255, 255)' },
   ],
-  nes: [
+  nintendo: [
     { color: 'rgb(124, 124, 124)' },
     { color: 'rgb(0, 0, 252)' },
     { color: 'rgb(0, 0, 188)' },
@@ -68,12 +68,6 @@ export const PALETTES = {
     { color: 'rgb(139, 172, 15)' },
     { color: 'rgb(48, 98, 48)' },
     { color: 'rgb(15, 56, 15)' },
-  ],
-  cga: [
-    { color: 'rgb(0, 0, 0)' },
-    { color: 'rgb(0, 255, 255)' },
-    { color: 'rgb(255, 0, 255)' },
-    { color: 'rgb(255, 255, 255)' },
   ],
   ega: [
     { color: 'rgb(0, 0, 0)' },

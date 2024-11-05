@@ -1,0 +1,69 @@
+name: PR Preview Build
+
+on:
+ pull_request:
+   branches:
+     - main
+   paths:
+     - 'backend/**'
+     - '.github/workflows/**'
+
+jobs:
+ preview:
+   runs-on: ubuntu-latest
+   permissions:
+     packages: write
+     pull-requests: write
+     contents: read
+   steps:
+     - name: Checkout repository
+       uses: actions/checkout@v4
+
+     - name: Generate preview tag
+       id: preview_tag
+       run: |
+         PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
+         SHA_SHORT=$(git rev-parse --short HEAD)
+         PREVIEW_TAG="pr-${PR_NUMBER}-${SHA_SHORT}"
+         echo "PREVIEW_TAG=$PREVIEW_TAG" >> $GITHUB_OUTPUT
+
+     - name: Set up Docker Buildx
+       uses: docker/setup-buildx-action@v3
+
+     - name: Login to GitHub Container Registry
+       uses: docker/login-action@v3
+       with:
+         registry: ghcr.io
+         username: ${{ github.actor }}
+         password: ${{ secrets.GITHUB_TOKEN }}
+
+     - name: Build and push Docker image
+       uses: docker/build-push-action@v6
+       with:
+         context: ./backend
+         push: true
+         tags: ghcr.io/${{ github.repository_owner }}/retrofy-api:${{ steps.preview_tag.outputs.PREVIEW_TAG }}
+         cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/retrofy-api:pr-buildcache
+         cache-to: type=registry,ref=ghcr.io/${{ github.repository_owner }}/retrofy-api:pr-buildcache,mode=max
+
+     - name: Comment PR
+       uses: actions/github-script@v6
+       with:
+         script: |
+           const preview_tag = '${{ steps.preview_tag.outputs.PREVIEW_TAG }}';
+           const image = 'ghcr.io/${{ github.repository_owner }}/retrofy-api:' + preview_tag;
+           const comment = `📦 Preview Docker image built and pushed!\n\n` +
+                         `Image: \`${image}\`\n\n` +
+                         `You can pull and test this image using:\n` +
+                         `\`\`\`bash\n` +
+                         `docker login ghcr.io\n` +
+                         `docker pull ${image}\n` +
+                         `\`\`\`\n\n` +
+                         `Note: You need to authenticate with GitHub Container Registry to pull this image.`;
+           
+           github.rest.issues.createComment({
+             issue_number: context.issue.number,
+             owner: context.repo.owner,
+             repo: context.repo.repo,
+             body: comment
+           })
