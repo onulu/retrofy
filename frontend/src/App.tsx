@@ -1,5 +1,4 @@
 import { useEffect } from 'react'
-import { inject } from '@vercel/analytics'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
 import Root from './routes/root'
@@ -17,6 +16,7 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Index />,
+        g,
       },
       {
         path: '/about',
@@ -26,7 +26,6 @@ const router = createBrowserRouter([
   },
 ])
 
-inject()
 function App() {
   const resetStore = useStore((state) => state.resetState)
 
