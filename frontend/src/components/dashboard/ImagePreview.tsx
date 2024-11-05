@@ -56,8 +56,20 @@ const ImagePreview = () => {
   }
 
   return isProcessing ? (
-    <div className="w-full h-[calc(100dvh-57px-1rem)] flex items-center justify-center">
-      <Loader2 className="animate-spin" />
+    <div className="w-full h-[calc(100dvh-57px-1rem)] flex flex-col items-center justify-center gap-2 relative">
+      <div className="absolute bg-background backdrop-blur-sm p-4 rounded-lg shadow-sm flex flex-col items-center justify-center gap-2 z-10">
+        <Loader2 className="animate-spin text-primary" />
+        <div className="text-sm text-muted-foreground max-w-[300px] text-center space-y-1">
+          <p className="font-medium">Generating image...</p>
+          <p className="text-xs text-muted-foreground font-medium">
+            This could take a while, please be patient.
+          </p>
+        </div>
+      </div>
+      <div
+        className="w-full h-full flex items-center justify-center bg-no-repeat bg-contain bg-center opacity-50 blur-lg"
+        style={{ backgroundImage: `url(${originalImage.url})` }}
+      />
     </div>
   ) : (
     <div className="w-full h-[calc(100dvh-57px-1rem)] flex items-center justify-center">
