@@ -19,6 +19,7 @@ import ParameterSelector from './ParameterSelector'
 
 import useStore from '@/store'
 import { useMediaQuery } from '@/utils/useMediaQuery'
+import { useToast } from '@/hooks/use-toast'
 
 const MobileNav = () => {
   const enhancedImage = useStore((state) => state.enhancedImage)
@@ -26,8 +27,10 @@ const MobileNav = () => {
   const resetState = useStore((state) => state.resetState)
   const setIsDrawerOpen = useStore((state) => state.setIsDrawerOpen)
   const isDrawerOpen = useStore((state) => state.isDrawerOpen)
-
+  const setAppError = useStore((state) => state.setAppError)
   const isDesktop = useMediaQuery('(min-width: 768px)')
+
+  const { toast } = useToast()
 
   useEffect(() => {
     if (isDesktop) {
@@ -35,6 +38,28 @@ const MobileNav = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDesktop])
+
+  const handleDownload = () => {
+    if (!enhancedImage || !originalImage) return
+
+    try {
+      const fileExtension = enhancedImage.blob.type.split('/')[1]
+      const fileName = `${originalImage.file.name}-retrofy.${fileExtension}`
+
+      const downloadLink = document.createElement('a')
+      downloadLink.href = enhancedImage.url
+      downloadLink.download = fileName
+      downloadLink.click()
+      downloadLink.remove()
+    } catch (error) {
+      setAppError(`Failed to download image: ${error}`)
+      toast({
+        variant: 'destructive',
+        title: 'Failed to download image',
+        description: 'Please try again.',
+      })
+    }
+  }
 
   return (
     originalImage && (
@@ -93,6 +118,7 @@ const MobileNav = () => {
             variant="muted"
             size="sm"
             className="rounded-full flex items-center justify-center gap-1"
+            onClick={handleDownload}
           >
             <Download className="size-4" />
             <p>Download</p>
